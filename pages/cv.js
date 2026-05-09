@@ -3,6 +3,37 @@ import Link from 'next/link'
 import BLOG from '@/blog.config'
 import cv from '@/data/cv.json'
 
+// 把字符串里的 unicode 上下标（₀₁₂…⁻⁺ 等）转换成 <sub>/<sup> 元素，
+// 字号和基线由 CSS 控制，这样 TNR / Optima 渲染才会正常。
+const SUB_MAP = { '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4', '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9' }
+const SUP_MAP = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '−', '⁺': '+' }
+const formatScientific = (text) => {
+  if (!text) return text
+  const parts = []
+  let buf = ''
+  let i = 0
+  while (i < text.length) {
+    const ch = text[i]
+    const isSub = SUB_MAP[ch] !== undefined
+    const isSup = SUP_MAP[ch] !== undefined
+    if (isSub || isSup) {
+      if (buf) { parts.push(buf); buf = '' }
+      const map = isSub ? SUB_MAP : SUP_MAP
+      let run = ''
+      while (i < text.length && map[text[i]] !== undefined) {
+        run += map[text[i]]
+        i++
+      }
+      parts.push(isSub ? <sub key={parts.length}>{run}</sub> : <sup key={parts.length}>{run}</sup>)
+    } else {
+      buf += ch
+      i++
+    }
+  }
+  if (buf) parts.push(buf)
+  return parts
+}
+
 const renderVenue = p => {
   if (!p.doi) {
     return <em className="not-italic font-semibold text-purple-700 dark:text-purple-300">{p.venue}</em>
@@ -36,7 +67,7 @@ const renderAuthors = authors =>
 
 const Section = ({ id, title, children }) => (
   <section id={id} className="scroll-mt-24 mb-14">
-    <h2 className="text-xs uppercase tracking-[0.2em] font-semibold text-purple-700 dark:text-purple-300 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+    <h2 className="text-2xl font-bold tracking-wide text-purple-700 dark:text-purple-300 mb-5 pb-2 border-b-2 border-purple-700/30 dark:border-purple-300/30">
       {title}
     </h2>
     {children}
@@ -79,6 +110,14 @@ export default function CV() {
           font-family: 'Optima LT Pro', 'Optima', 'Optima Nova', 'Avenir Next', 'Avenir', 'Segoe UI', system-ui, sans-serif;
           letter-spacing: 0.015em;
         }
+        .cv-root sub, .cv-root sup {
+          font-size: 0.72em;
+          line-height: 0;
+          position: relative;
+          vertical-align: baseline;
+        }
+        .cv-root sup { top: -0.5em; }
+        .cv-root sub { bottom: -0.25em; }
       `}</style>
       <main className="cv-root min-h-screen bg-white dark:bg-night text-gray-800 dark:text-gray-200 font-serif">
         <div className="max-w-6xl mx-auto px-6 py-10 lg:py-16 lg:flex lg:gap-12">
@@ -221,7 +260,7 @@ export default function CV() {
                     {pubsByYear[year].map((p, i) => (
                       <li key={i} className="pl-5 border-l-2 border-gray-200 dark:border-gray-700 hover:border-purple-700 dark:hover:border-purple-300 transition-colors">
                         <div className="text-[15px] font-medium text-gray-900 dark:text-white leading-snug">
-                          {p.title}
+                          {formatScientific(p.title)}
                         </div>
                         <div className="text-sm mt-1 leading-relaxed">
                           {renderAuthors(p.authors)}
@@ -244,7 +283,7 @@ export default function CV() {
                         </div>
                         {p.highlight && (
                           <p className="text-sm mt-2 text-gray-600 dark:text-gray-400 leading-relaxed">
-                            {p.highlight}
+                            {formatScientific(p.highlight)}
                           </p>
                         )}
                       </li>
