@@ -36,7 +36,7 @@ const formatScientific = (text) => {
 
 const CitationInner = ({ p }) => (
   <>
-    <em className="not-italic font-semibold text-purple-700 dark:text-purple-300">{p.venue}</em>
+    <em className="not-italic font-semibold">{p.venue}</em>
     {p.volume_pages && <span>, {p.volume_pages}</span>}
     {p.status && <span className="italic"> ({p.status})</span>}
     <span> · {p.year}</span>
