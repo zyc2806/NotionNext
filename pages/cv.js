@@ -63,7 +63,7 @@ const renderAuthors = authors =>
   authors.map((a, i) => {
     const sup = `${a.co_first ? '‡' : ''}${a.corresponding ? '*' : ''}`
     const cls = a.self
-      ? 'font-semibold text-purple-700 dark:text-purple-300 underline decoration-dotted underline-offset-2'
+      ? 'font-bold text-gray-900 dark:text-white'
       : 'text-gray-700 dark:text-gray-300'
     return (
       <span key={i}>
@@ -258,7 +258,7 @@ export default function CV() {
 
             <Section id="publications" title="Publications">
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 italic">
-                <sup>‡</sup> co-first authorship · <sup>*</sup> corresponding author · <span className="font-semibold text-purple-700 dark:text-purple-300 underline decoration-dotted">underlined</span> = author
+                <sup>‡</sup> co-first authorship · <sup>*</sup> corresponding author · <strong className="font-bold text-gray-900 dark:text-white">bold</strong> = author
               </p>
               {years.map(year => (
                 <div key={year} className="mb-8">
