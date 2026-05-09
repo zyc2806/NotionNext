@@ -59,6 +59,24 @@ const renderCitationLine = p => {
   )
 }
 
+const renderTitle = p => {
+  const titleNodes = formatScientific(p.title)
+  if (!p.doi) {
+    return titleNodes
+  }
+  return (
+    <a
+      href={`https://doi.org/${p.doi}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="hover:underline decoration-purple-700/60 dark:decoration-purple-300/60 underline-offset-2"
+    >
+      {titleNodes}
+      <span aria-hidden="true" className="ml-1.5 inline-block text-gray-400 dark:text-gray-500 text-[0.85em] align-baseline">↗</span>
+    </a>
+  )
+}
+
 const renderAuthors = authors =>
   authors.map((a, i) => {
     const sup = `${a.co_first ? '‡' : ''}${a.corresponding ? '*' : ''}`
@@ -269,7 +287,7 @@ export default function CV() {
                     {pubsByYear[year].map((p, i) => (
                       <li key={i} className="pl-5 border-l-2 border-gray-200 dark:border-gray-700 hover:border-purple-700 dark:hover:border-purple-300 transition-colors">
                         <div className="text-[15px] font-medium text-gray-900 dark:text-white leading-snug">
-                          {formatScientific(p.title)}
+                          {renderTitle(p)}
                         </div>
                         <div className="text-sm mt-1 leading-relaxed">
                           {renderAuthors(p.authors)}
