@@ -12,7 +12,7 @@
     "photo": "/me.jpg",
     "links": {
       "github": "https://github.com/zyc2806",
-      "google_scholar": "",
+      "google_scholar": "https://scholar.google.com/citations?user=mqlWKSUAAAAJ",
       "orcid": "https://orcid.org/0000-0003-4089-745X",
       "website": "https://zhangyichen.life"
     },
@@ -43,6 +43,7 @@
         { "name": "Zhao, X.", "corresponding": true }
       ],
       "venue": "Green Chem.",
+      "doi": "10.1039/d5gc01934f",
       "year": 2025,
       "volume_pages": "27, 8517–8531",
       "highlight": "Self-powered electrocatalytic system using nanoflower-like Co-catalysts for integrated lignin valorization. High-current electrodeposition on Ni foam yields a bifunctional catalyst that simultaneously harvests electricity (196.1 mW cm⁻² peak), aromatic aldehydes (2.90–3.34% yield) and H₂ (12.7 mL cm⁻²) from lignin."
@@ -61,6 +62,7 @@
         { "name": "Fu, G.", "corresponding": true }
       ],
       "venue": "Nat. Commun.",
+      "doi": "10.1038/s41467-025-63059-0",
       "year": 2025,
       "volume_pages": "16, 7802",
       "highlight": "Engineered Cu₂O nanoframes via ligand-protected facet etching achieve 0.18 mmol g_cat⁻¹ h⁻¹ PO formation rate with 83.8% selectivity at 175 °C. DFT and characterization confirm Cu₂O {110} facets promote active oxygen species generation and selective epoxidation."
@@ -79,6 +81,7 @@
         { "name": "Qiu, X.", "corresponding": true }
       ],
       "venue": "Angew. Chem. Int. Ed.",
+      "doi": "10.1002/anie.202514542",
       "year": 2025,
       "volume_pages": "64, e202514542",
       "highlight": "ORR pathway-switching strategy on DFT-guided Fe₁V₁-NC atomic pair catalysts circumvents ROS generation. The N₂–Fe–N₂–V–N₂ configuration enables direct O=O bond cleavage (side-on adsorption), achieving 16 mV decay over 50 k cycles, E₁/₂ = 0.89 V, and 400 h zinc-air battery durability at 10 mA cm⁻²."
@@ -113,6 +116,7 @@
         { "name": "Zhao, X.", "corresponding": true }
       ],
       "venue": "Appl. Catal. B: Environ.",
+      "doi": "10.1016/j.apcatb.2025.125146",
       "year": 2025,
       "volume_pages": "368, 125146"
     },
@@ -129,6 +133,7 @@
         { "name": "Zhao, X.", "corresponding": true }
       ],
       "venue": "Energy Environ. Sci.",
+      "doi": "10.1039/d4ee06106c",
       "year": 2025,
       "volume_pages": "18, 3633–3646"
     },
@@ -142,6 +147,7 @@
         { "name": "Zhao, X.", "corresponding": true }
       ],
       "venue": "Chem. Eng. J.",
+      "doi": "10.1016/j.cej.2024.151001",
       "year": 2024,
       "volume_pages": "488, 151001"
     },
@@ -158,6 +164,7 @@
         { "name": "Li, Q." }
       ],
       "venue": "ACS Appl. Nano Mater.",
+      "doi": "10.1021/acsanm.3c01362",
       "year": 2023,
       "volume_pages": "6(11), 9687–9696"
     }

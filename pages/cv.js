@@ -3,6 +3,22 @@ import Link from 'next/link'
 import BLOG from '@/blog.config'
 import cv from '@/data/cv.json'
 
+const renderVenue = p => {
+  if (!p.doi) {
+    return <em className="not-italic font-semibold text-purple-700 dark:text-purple-300">{p.venue}</em>
+  }
+  return (
+    <a
+      href={`https://doi.org/${p.doi}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="not-italic font-semibold text-purple-700 dark:text-purple-300 hover:underline"
+    >
+      {p.venue}
+    </a>
+  )
+}
+
 const renderAuthors = authors =>
   authors.map((a, i) => {
     const sup = `${a.co_first ? '‡' : ''}${a.corresponding ? '*' : ''}`
@@ -61,7 +77,7 @@ export default function CV() {
                 <img
                   src={photoSrc}
                   alt={profile.name}
-                  className="w-40 h-40 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700 mb-5"
+                  className="w-44 h-auto rounded-lg object-contain bg-white ring-1 ring-gray-200 dark:ring-gray-700 mb-5"
                 />
               )}
               <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -195,10 +211,20 @@ export default function CV() {
                           {renderAuthors(p.authors)}
                         </div>
                         <div className="text-sm mt-1 text-gray-600 dark:text-gray-400">
-                          <em className="not-italic font-semibold text-purple-700 dark:text-purple-300">{p.venue}</em>
+                          {renderVenue(p)}
                           {p.volume_pages && <span>, {p.volume_pages}</span>}
                           {p.status && <span className="italic"> ({p.status})</span>}
                           <span> · {p.year}</span>
+                          {p.doi && (
+                            <a
+                              href={`https://doi.org/${p.doi}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="ml-2 text-xs text-gray-500 dark:text-gray-500 hover:text-purple-700 dark:hover:text-purple-300"
+                            >
+                              [DOI]
+                            </a>
+                          )}
                         </div>
                         {p.highlight && (
                           <p className="text-sm mt-2 text-gray-600 dark:text-gray-400 leading-relaxed">
