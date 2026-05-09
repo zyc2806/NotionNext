@@ -244,21 +244,19 @@ export default function CV() {
                 ['Characterization', skills.characterization],
                 ['Engineering', skills.engineering],
                 ['Programming', skills.programming]
-              ].map(([label, items]) => (
-                items?.length ? (
-                  <div key={label} className="mb-3 flex flex-col sm:flex-row sm:gap-4">
-                    <div className="sm:w-40 text-sm font-semibold text-gray-700 dark:text-gray-300 font-sans uppercase tracking-wider text-xs pt-0.5">
-                      {label}
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {items.map((s, i) => (
-                        <span key={i} className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded font-sans">
-                          {s}
-                        </span>
-                      ))}
-                    </div>
+              ].filter(([, items]) => items?.length > 0).map(([label, items]) => (
+                <div key={label} className="mb-3 flex flex-col sm:flex-row sm:gap-4">
+                  <div className="sm:w-40 text-sm font-semibold text-gray-700 dark:text-gray-300 font-sans uppercase tracking-wider text-xs pt-0.5">
+                    {label}
                   </div>
-                ) : null
+                  <div className="flex flex-wrap gap-2">
+                    {items.map((s, i) => (
+                      <span key={i} className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded font-sans">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               ))}
 
               {summary?.length > 0 && (
