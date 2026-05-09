@@ -67,7 +67,20 @@ export default function CV() {
         <meta property="og:url" content={`${profile.links?.website || ''}/cv`} />
       </Head>
 
-      <main className="min-h-screen bg-white dark:bg-night text-gray-800 dark:text-gray-200 font-serif">
+      <style>{`
+        .cv-root, .cv-root .font-serif {
+          font-family: 'Times New Roman', 'Times', 'Liberation Serif', 'Songti SC', serif;
+        }
+        .cv-root .font-sans {
+          font-family: 'Optima LT Pro', 'Optima', 'Optima Nova', 'Avenir Next', 'Avenir', 'Segoe UI', system-ui, sans-serif;
+          letter-spacing: 0.01em;
+        }
+        .cv-root h1, .cv-root h2, .cv-root h3 {
+          font-family: 'Optima LT Pro', 'Optima', 'Optima Nova', 'Avenir Next', 'Avenir', 'Segoe UI', system-ui, sans-serif;
+          letter-spacing: 0.015em;
+        }
+      `}</style>
+      <main className="cv-root min-h-screen bg-white dark:bg-night text-gray-800 dark:text-gray-200 font-serif">
         <div className="max-w-6xl mx-auto px-6 py-10 lg:py-16 lg:flex lg:gap-12">
           {/* Sidebar */}
           <aside className="lg:w-72 lg:flex-shrink-0 lg:sticky lg:top-10 lg:self-start mb-10 lg:mb-0">
