@@ -153,6 +153,9 @@ export default function CV() {
               {profile.cv_pdf && (
                 <a
                   href={profile.cv_pdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download="Zhang_Yichen_CV.pdf"
                   className="mt-6 inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold tracking-wider uppercase border border-purple-700 dark:border-purple-300 text-purple-700 dark:text-purple-300 hover:bg-purple-700 hover:text-white dark:hover:bg-purple-300 dark:hover:text-gray-900 transition-colors font-sans"
                 >
                   <i className="fas fa-file-pdf" /> Download PDF
