@@ -34,18 +34,27 @@ const formatScientific = (text) => {
   return parts
 }
 
-const renderVenue = p => {
+const CitationInner = ({ p }) => (
+  <>
+    <em className="not-italic font-semibold text-purple-700 dark:text-purple-300">{p.venue}</em>
+    {p.volume_pages && <span>, {p.volume_pages}</span>}
+    {p.status && <span className="italic"> ({p.status})</span>}
+    <span> · {p.year}</span>
+  </>
+)
+
+const renderCitationLine = p => {
   if (!p.doi) {
-    return <em className="not-italic font-semibold text-purple-700 dark:text-purple-300">{p.venue}</em>
+    return <CitationInner p={p} />
   }
   return (
     <a
       href={`https://doi.org/${p.doi}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="not-italic font-semibold text-purple-700 dark:text-purple-300 hover:underline"
+      className="hover:underline decoration-purple-700/60 dark:decoration-purple-300/60 underline-offset-2"
     >
-      {p.venue}
+      <CitationInner p={p} />
     </a>
   )
 }
@@ -266,20 +275,7 @@ export default function CV() {
                           {renderAuthors(p.authors)}
                         </div>
                         <div className="text-sm mt-1 text-gray-600 dark:text-gray-400">
-                          {renderVenue(p)}
-                          {p.volume_pages && <span>, {p.volume_pages}</span>}
-                          {p.status && <span className="italic"> ({p.status})</span>}
-                          <span> · {p.year}</span>
-                          {p.doi && (
-                            <a
-                              href={`https://doi.org/${p.doi}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="ml-2 text-xs text-gray-500 dark:text-gray-500 hover:text-purple-700 dark:hover:text-purple-300"
-                            >
-                              [DOI]
-                            </a>
-                          )}
+                          {renderCitationLine(p)}
                         </div>
                         {p.highlight && (
                           <p className="text-sm mt-2 text-gray-600 dark:text-gray-400 leading-relaxed">
