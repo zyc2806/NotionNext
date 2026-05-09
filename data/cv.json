@@ -9,11 +9,11 @@
     "email": "zhang-yc23@mails.tsinghua.edu.cn",
     "phone": "+86 180 5569 2939",
     "address": "Room 310, Yingshi Building, Haidian District, Beijing",
-    "photo": "",
+    "photo": "/me.jpg",
     "links": {
       "github": "https://github.com/zyc2806",
       "google_scholar": "",
-      "orcid": "",
+      "orcid": "https://orcid.org/0000-0003-4089-745X",
       "website": "https://zhangyichen.life"
     },
     "cv_pdf": "/cv.pdf"
