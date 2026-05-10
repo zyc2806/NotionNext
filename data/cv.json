@@ -2,13 +2,28 @@
   "profile": {
     "name": "Zhang Yichen",
     "name_zh": "张逸晨",
-    "title": "Ph.D. Candidate in Chemical Engineering",
-    "affiliation": "Tsinghua University",
-    "tagline": "Electrocatalysis · Atomically Dispersed Sites · Oxygen Reduction Reaction",
-    "bio": "I am a Ph.D. candidate in Chemical Engineering at Tsinghua University. My research focuses on non-precious metal catalysts for the oxygen reduction reaction (ORR), bridging experimental synthesis and characterization with density-functional theory to uncover structure–activity relationships at atomically dispersed active sites in surface catalytic processes.",
+    "title": {
+      "en": "Ph.D. Candidate in Chemical Engineering",
+      "zh": "化学工程博士研究生"
+    },
+    "affiliation": {
+      "en": "Tsinghua University",
+      "zh": "清华大学"
+    },
+    "tagline": {
+      "en": "Electrocatalysis · Atomically Dispersed Sites · Oxygen Reduction Reaction",
+      "zh": "电催化 · 原子级分散位点 · 氧还原反应"
+    },
+    "bio": {
+      "en": "I am a Ph.D. candidate in Chemical Engineering at Tsinghua University. My research focuses on non-precious metal catalysts for the oxygen reduction reaction (ORR), bridging experimental synthesis and characterization with density-functional theory to uncover structure–activity relationships at atomically dispersed active sites in surface catalytic processes.",
+      "zh": "我是清华大学化学工程系博士研究生，研究方向为面向氧还原反应（ORR）的非贵金属催化剂；通过实验合成与表征结合密度泛函理论，揭示表面催化过程中原子级分散活性位点的构效关系。"
+    },
     "email": "zhang-yc23@mails.tsinghua.edu.cn",
     "phone": "+86 180 5569 2939",
-    "address": "Room 310, Yingshi Building, Haidian District, Beijing",
+    "address": {
+      "en": "Room 310, Yingshi Building, Haidian District, Beijing",
+      "zh": "北京市海淀区清华大学英士楼 310 室"
+    },
     "photo": "/me.jpg",
     "links": {
       "github": "https://github.com/zyc2806",
@@ -20,21 +35,36 @@
   },
   "education": [
     {
-      "school": "Tsinghua University",
-      "degree": "Ph.D. Candidate, Chemical Engineering",
-      "date": "Jun 2023 – Present",
-      "details": "GPA 3.99 / 4.00 · Class rank 3 / 86"
+      "school": { "en": "Tsinghua University", "zh": "清华大学" },
+      "degree": {
+        "en": "Ph.D. Candidate, Chemical Engineering",
+        "zh": "化学工程，博士研究生"
+      },
+      "date": { "en": "Jun 2023 – Present", "zh": "2023.06 – 至今" },
+      "details": {
+        "en": "GPA 3.99 / 4.00 · Class rank 3 / 86",
+        "zh": "GPA 3.99 / 4.00 · 班级排名 3 / 86"
+      }
     },
     {
-      "school": "Xiamen University",
-      "degree": "B.Sc., Chemical Engineering",
-      "date": "Sep 2019 – Jun 2023",
-      "details": "GPA 3.82 / 4.00 · Class rank 1 / 42"
+      "school": { "en": "Xiamen University", "zh": "厦门大学" },
+      "degree": {
+        "en": "B.Sc., Chemical Engineering",
+        "zh": "化学工程，工学学士"
+      },
+      "date": { "en": "Sep 2019 – Jun 2023", "zh": "2019.09 – 2023.06" },
+      "details": {
+        "en": "GPA 3.82 / 4.00 · Class rank 1 / 42",
+        "zh": "GPA 3.82 / 4.00 · 班级排名 1 / 42"
+      }
     }
   ],
   "publications": [
     {
-      "title": "Efficient harvesting of electricity, aromatic aldehydes and H₂ from lignin over nanoflower-like cobalt-based bifunctional electrocatalysts",
+      "title": {
+        "en": "Efficient harvesting of electricity, aromatic aldehydes and H₂ from lignin over nanoflower-like cobalt-based bifunctional electrocatalysts",
+        "zh": "纳米花状钴基双功能电催化剂从木质素中高效收获电能、芳香醛与 H₂"
+      },
       "authors": [
         { "name": "Zhang, Y.", "self": true, "co_first": true },
         { "name": "Gao, D.", "co_first": true },
@@ -46,10 +76,16 @@
       "doi": "10.1039/d5gc01934f",
       "year": 2025,
       "volume_pages": "27, 8517–8531",
-      "highlight": "Self-powered electrocatalytic system using nanoflower-like Co-catalysts for integrated lignin valorization. High-current electrodeposition on Ni foam yields a bifunctional catalyst that simultaneously harvests electricity (196.1 mW cm⁻² peak), aromatic aldehydes (2.90–3.34% yield) and H₂ (12.7 mL cm⁻²) from lignin."
+      "highlight": {
+        "en": "Self-powered electrocatalytic system using nanoflower-like Co-catalysts for integrated lignin valorization. High-current electrodeposition on Ni foam yields a bifunctional catalyst that simultaneously harvests electricity (196.1 mW cm⁻² peak), aromatic aldehydes (2.90–3.34% yield) and H₂ (12.7 mL cm⁻²) from lignin.",
+        "zh": "构建自驱动电催化体系，利用纳米花状 Co 基催化剂实现木质素一体化增值。在泡沫镍上的大电流电沉积得到双功能催化剂，可同时从木质素中收获电能（峰值 196.1 mW cm⁻²）、芳香醛（产率 2.90–3.34%）与 H₂（12.7 mL cm⁻²）。"
+      }
     },
     {
-      "title": "Internally hollow Cu₂O nanoframes with the abundance of {110} facets enhance direct propylene epoxidation",
+      "title": {
+        "en": "Internally hollow Cu₂O nanoframes with the abundance of {110} facets enhance direct propylene epoxidation",
+        "zh": "富含 {110} 晶面的内部中空 Cu₂O 纳米框架增强丙烯直接环氧化"
+      },
       "authors": [
         { "name": "Qiu, Y.", "co_first": true },
         { "name": "Zhang, Y.", "self": true, "co_first": true },
@@ -65,10 +101,16 @@
       "doi": "10.1038/s41467-025-63059-0",
       "year": 2025,
       "volume_pages": "16, 7802",
-      "highlight": "Engineered Cu₂O nanoframes via ligand-protected facet etching achieve 0.18 mmol g_cat⁻¹ h⁻¹ PO formation rate with 83.8% selectivity at 175 °C. DFT and characterization confirm Cu₂O {110} facets promote active oxygen species generation and selective epoxidation."
+      "highlight": {
+        "en": "Engineered Cu₂O nanoframes via ligand-protected facet etching achieve 0.18 mmol g_cat⁻¹ h⁻¹ PO formation rate with 83.8% selectivity at 175 °C. DFT and characterization confirm Cu₂O {110} facets promote active oxygen species generation and selective epoxidation.",
+        "zh": "通过配体保护的晶面刻蚀设计 Cu₂O 纳米框架，在 175 °C 下取得 0.18 mmol g_cat⁻¹ h⁻¹ 的 PO 生成速率与 83.8% 的选择性。DFT 计算与表征证实 Cu₂O {110} 晶面有利于活性氧物种的生成与选择性环氧化。"
+      }
     },
     {
-      "title": "Circumventing radical generation on Fe-V atomic pair catalyst for robust oxygen reduction and zinc-air batteries",
+      "title": {
+        "en": "Circumventing radical generation on Fe-V atomic pair catalyst for robust oxygen reduction and zinc-air batteries",
+        "zh": "Fe-V 原子对催化剂规避自由基生成实现稳健的氧还原与锌-空气电池"
+      },
       "authors": [
         { "name": "Ran, L.", "co_first": true },
         { "name": "Zhang, Y.", "self": true, "co_first": true },
@@ -84,10 +126,16 @@
       "doi": "10.1002/anie.202514542",
       "year": 2025,
       "volume_pages": "64, e202514542",
-      "highlight": "ORR pathway-switching strategy on DFT-guided Fe₁V₁-NC atomic pair catalysts circumvents ROS generation. The N₂–Fe–N₂–V–N₂ configuration enables direct O=O bond cleavage (side-on adsorption), achieving 16 mV decay over 50 k cycles, E₁/₂ = 0.89 V, and 400 h zinc-air battery durability at 10 mA cm⁻²."
+      "highlight": {
+        "en": "ORR pathway-switching strategy on DFT-guided Fe₁V₁-NC atomic pair catalysts circumvents ROS generation. The N₂–Fe–N₂–V–N₂ configuration enables direct O=O bond cleavage (side-on adsorption), achieving 16 mV decay over 50 k cycles, E₁/₂ = 0.89 V, and 400 h zinc-air battery durability at 10 mA cm⁻².",
+        "zh": "在 DFT 指导下的 Fe₁V₁-NC 原子对催化剂上提出 ORR 路径切换策略，规避活性氧物种（ROS）的生成。N₂–Fe–N₂–V–N₂ 构型实现 O=O 键侧位吸附与直接断裂，5 万次循环后衰减仅 16 mV，E₁/₂ = 0.89 V，在 10 mA cm⁻² 下锌-空气电池稳定运行 400 h。"
+      }
     },
     {
-      "title": "Low-coordinate Cu₁–N₂ sites in single-atom catalyst for highly efficient propylene epoxidation with molecular oxygen",
+      "title": {
+        "en": "Low-coordinate Cu₁–N₂ sites in single-atom catalyst for highly efficient propylene epoxidation with molecular oxygen",
+        "zh": "单原子催化剂中低配位 Cu₁–N₂ 位点用于分子氧高效丙烯环氧化"
+      },
       "authors": [
         { "name": "Qiu, Y." },
         { "name": "Zhang, Y.", "self": true },
@@ -103,11 +151,17 @@
       ],
       "venue": "Nat. Catal.",
       "year": 2025,
-      "status": "under revision",
-      "highlight": "A novel Cu₁–N₂ single-atom catalyst for direct propylene epoxidation, with record PO formation rates. Characterization and DFT show exclusive Cu–N coordination enhances electrophilic oxygen species formation, enabling selective C=C bond activation."
+      "status": { "en": "under revision", "zh": "审稿中" },
+      "highlight": {
+        "en": "A novel Cu₁–N₂ single-atom catalyst for direct propylene epoxidation, with record PO formation rates. Characterization and DFT show exclusive Cu–N coordination enhances electrophilic oxygen species formation, enabling selective C=C bond activation.",
+        "zh": "提出新型 Cu₁–N₂ 单原子催化剂用于丙烯直接环氧化，PO 生成速率刷新纪录。表征与 DFT 表明 Cu–N 单一配位有利于亲电氧物种生成，从而实现 C=C 键的选择性活化。"
+      }
     },
     {
-      "title": "Facile preparation of 2D nanomaterials by chelating-agent-assisted electrodeposition for efficient electrochemical oxidation of biomass-derived aldehydes coupled with CO₂ reduction",
+      "title": {
+        "en": "Facile preparation of 2D nanomaterials by chelating-agent-assisted electrodeposition for efficient electrochemical oxidation of biomass-derived aldehydes coupled with CO₂ reduction",
+        "zh": "螯合剂辅助电沉积制备二维纳米材料用于生物质衍生醛的电催化氧化耦合 CO₂ 还原"
+      },
       "authors": [
         { "name": "Liu, X." },
         { "name": "Zhang, Y.", "self": true },
@@ -121,7 +175,10 @@
       "volume_pages": "368, 125146"
     },
     {
-      "title": "Self-powered electrochemical synthesis of hydrogen peroxide from air and lignin",
+      "title": {
+        "en": "Self-powered electrochemical synthesis of hydrogen peroxide from air and lignin",
+        "zh": "由空气与木质素自驱动电化学合成过氧化氢"
+      },
       "authors": [
         { "name": "Li, Y." },
         { "name": "Ouyang, D." },
@@ -138,7 +195,10 @@
       "volume_pages": "18, 3633–3646"
     },
     {
-      "title": "Upgrading biomass-derived furan aldehydes by coupled electrochemical conversion over silver-based electrocatalysts",
+      "title": {
+        "en": "Upgrading biomass-derived furan aldehydes by coupled electrochemical conversion over silver-based electrocatalysts",
+        "zh": "银基电催化剂耦合电化学转化升级生物质衍生呋喃醛"
+      },
       "authors": [
         { "name": "Dai, Z." },
         { "name": "Liu, X." },
@@ -152,7 +212,10 @@
       "volume_pages": "488, 151001"
     },
     {
-      "title": "Supported AgCuCl nanoclusters as bimetal catalysts for propylene epoxidation with molecular oxygen",
+      "title": {
+        "en": "Supported AgCuCl nanoclusters as bimetal catalysts for propylene epoxidation with molecular oxygen",
+        "zh": "负载型 AgCuCl 纳米团簇作为双金属催化剂用于分子氧丙烯环氧化"
+      },
       "authors": [
         { "name": "Xiao, S." },
         { "name": "Wei, C." },
@@ -170,19 +233,66 @@
     }
   ],
   "awards": [
-    { "title": "Friends of Tsinghua – Shanghai Huayi Scholarship", "org": "Tsinghua University", "date": "Oct 2025" },
-    { "title": "Best Poster Award, 22nd National Electrochemical Congress", "org": "Chinese Society of Electrochemistry", "date": "Oct 2024" },
-    { "title": "Teng-Teng Scholarship", "org": "Tsinghua University", "date": "Oct 2024" },
-    { "title": "Gao-Yingshi Scholarship", "org": "Tsinghua University", "date": "Oct 2024" },
-    { "title": "Future Scholars Scholarship", "org": "Tsinghua University", "date": "Sep 2023" },
-    { "title": "National Scholarship", "org": "Xiamen University", "date": "Nov 2022" },
-    { "title": "National Scholarship", "org": "Xiamen University", "date": "Nov 2021" },
-    { "title": "Maotai Scholarship", "org": "Xiamen University", "date": "Nov 2020" }
+    {
+      "title": {
+        "en": "Friends of Tsinghua – Shanghai Huayi Scholarship",
+        "zh": "清华之友 — 上海华谊奖学金"
+      },
+      "org": { "en": "Tsinghua University", "zh": "清华大学" },
+      "date": { "en": "Oct 2025", "zh": "2025.10" }
+    },
+    {
+      "title": {
+        "en": "Best Poster Award, 22nd National Electrochemical Congress",
+        "zh": "第二十二届全国电化学大会优秀墙报奖"
+      },
+      "org": {
+        "en": "Chinese Society of Electrochemistry",
+        "zh": "中国电化学学会"
+      },
+      "date": { "en": "Oct 2024", "zh": "2024.10" }
+    },
+    {
+      "title": { "en": "Teng-Teng Scholarship", "zh": "腾腾奖学金" },
+      "org": { "en": "Tsinghua University", "zh": "清华大学" },
+      "date": { "en": "Oct 2024", "zh": "2024.10" }
+    },
+    {
+      "title": { "en": "Gao-Yingshi Scholarship", "zh": "高英士奖学金" },
+      "org": { "en": "Tsinghua University", "zh": "清华大学" },
+      "date": { "en": "Oct 2024", "zh": "2024.10" }
+    },
+    {
+      "title": { "en": "Future Scholars Scholarship", "zh": "未来学者奖学金" },
+      "org": { "en": "Tsinghua University", "zh": "清华大学" },
+      "date": { "en": "Sep 2023", "zh": "2023.09" }
+    },
+    {
+      "title": { "en": "National Scholarship", "zh": "国家奖学金" },
+      "org": { "en": "Xiamen University", "zh": "厦门大学" },
+      "date": { "en": "Nov 2022", "zh": "2022.11" }
+    },
+    {
+      "title": { "en": "National Scholarship", "zh": "国家奖学金" },
+      "org": { "en": "Xiamen University", "zh": "厦门大学" },
+      "date": { "en": "Nov 2021", "zh": "2021.11" }
+    },
+    {
+      "title": { "en": "Maotai Scholarship", "zh": "茅台奖学金" },
+      "org": { "en": "Xiamen University", "zh": "厦门大学" },
+      "date": { "en": "Nov 2020", "zh": "2020.11" }
+    }
   ],
   "skills": {
     "research_interests": [
-      "Experimental and theoretical studies on non-precious metal catalysts for ORR",
-      "Structure–activity relationships of catalysts with atomically dispersed sites in surface catalytic processes"
+      {
+        "en": "Experimental and theoretical studies on non-precious metal catalysts for ORR",
+        "zh": "面向氧还原反应（ORR）的非贵金属催化剂的实验与理论研究"
+      },
+      {
+        "en": "Structure–activity relationships of catalysts with atomically dispersed sites in surface catalytic processes",
+        "zh": "表面催化过程中原子级分散位点催化剂的构效关系"
+      }
     ],
     "computation": ["VASP", "CP2K", "Gaussian", "Material Studio", "VESTA", "vaspkit", "FDMNES", "Demeter"],
     "characterization": ["XAS", "XRD", "SEM", "TEM", "Jade", "Advantage"],
@@ -190,10 +300,25 @@
     "programming": ["Python", "MATLAB", "C"]
   },
   "summary": [
-    "Top-ranked student in Chemical Engineering at both Xiamen University and Tsinghua University.",
-    "Hands-on experience with materials synthesis and a wide range of characterization tools (XAS, XRD, SEM, TEM, …).",
-    "Proficient in DFT and AIMD workflows using VASP, CP2K, Gaussian, VESTA, vaspkit and related toolchains.",
-    "Comfortable bridging experimental and theoretical work, communicating effectively with experimental collaborators.",
-    "Programming in Python, MATLAB and C; team player with strong execution under deadlines."
+    {
+      "en": "Top-ranked student in Chemical Engineering at both Xiamen University and Tsinghua University.",
+      "zh": "在厦门大学与清华大学化学工程专业均名列前茅。"
+    },
+    {
+      "en": "Hands-on experience with materials synthesis and a wide range of characterization tools (XAS, XRD, SEM, TEM, …).",
+      "zh": "具备材料合成与多种表征手段（XAS、XRD、SEM、TEM 等）的动手经验。"
+    },
+    {
+      "en": "Proficient in DFT and AIMD workflows using VASP, CP2K, Gaussian, VESTA, vaspkit and related toolchains.",
+      "zh": "熟练使用 VASP、CP2K、Gaussian、VESTA、vaspkit 等工具链开展 DFT 与 AIMD 工作流。"
+    },
+    {
+      "en": "Comfortable bridging experimental and theoretical work, communicating effectively with experimental collaborators.",
+      "zh": "擅长打通实验与理论研究，能够与实验合作者高效沟通。"
+    },
+    {
+      "en": "Programming in Python, MATLAB and C; team player with strong execution under deadlines.",
+      "zh": "熟练使用 Python、MATLAB 与 C 编程；团队协作良好，能在 deadline 下高效推进任务。"
+    }
   ]
 }
