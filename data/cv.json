@@ -35,24 +35,36 @@
   },
   "education": [
     {
-      "school": { "en": "Tsinghua University", "zh": "清华大学" },
+      "school": {
+        "en": "Tsinghua University",
+        "zh": "清华大学"
+      },
       "degree": {
         "en": "Ph.D. Candidate, Chemical Engineering",
         "zh": "化学工程，博士研究生"
       },
-      "date": { "en": "Jun 2023 – Present", "zh": "2023.06 – 至今" },
+      "date": {
+        "en": "Jun 2023 – Present",
+        "zh": "2023.06 – 至今"
+      },
       "details": {
         "en": "GPA 3.99 / 4.00 · Class rank 3 / 86",
         "zh": "GPA 3.99 / 4.00 · 专业排名 3 / 86"
       }
     },
     {
-      "school": { "en": "Xiamen University", "zh": "厦门大学" },
+      "school": {
+        "en": "Xiamen University",
+        "zh": "厦门大学"
+      },
       "degree": {
         "en": "B.Sc., Chemical Engineering",
         "zh": "化学工程，工学学士"
       },
-      "date": { "en": "Sep 2019 – Jun 2023", "zh": "2019.09 – 2023.06" },
+      "date": {
+        "en": "Sep 2019 – Jun 2023",
+        "zh": "2019.09 – 2023.06"
+      },
       "details": {
         "en": "GPA 3.82 / 4.00 · Class rank 1 / 42",
         "zh": "GPA 3.82 / 4.00 · 专业排名 1 / 42"
@@ -62,15 +74,82 @@
   "publications": [
     {
       "title": {
+        "en": "Motif editing for reaction pathway switching from formate to CO in single-atom indium catalysts via adjacent carbon site manipulation",
+        "zh": "通过近邻碳位调控实现单原子铟催化剂的配位基元编辑与甲酸盐到 CO 的反应路径切换"
+      },
+      "authors": [
+        {
+          "name": "Zhao, W.",
+          "co_first": true
+        },
+        {
+          "name": "Zhang, Y.",
+          "self": true,
+          "co_first": true
+        },
+        {
+          "name": "Zhu, X."
+        },
+        {
+          "name": "Ran, L."
+        },
+        {
+          "name": "Tong, W.",
+          "corresponding": true
+        },
+        {
+          "name": "Wang, M."
+        },
+        {
+          "name": "Zhou, H."
+        },
+        {
+          "name": "Chen, S.",
+          "corresponding": true
+        },
+        {
+          "name": "Farràs, P.",
+          "corresponding": true
+        },
+        {
+          "name": "Qiu, X.",
+          "corresponding": true
+        }
+      ],
+      "venue": "Adv. Funct. Mater.",
+      "doi": "10.1002/adfm.76951",
+      "year": 2026,
+      "volume_pages": "36, e76951",
+      "highlight": {
+        "en": "Incorporating O into the In–N₄ Lewis interface edits the motif to In–N₂O₂, switching the CO₂RR product from formate to CO with >90% CO selectivity across −0.51 to −1.10 V vs. RHE. In situ spectroscopy and DFT reveal that In–N₂O₂ enriches the electron density of adjacent carbon sites, facilitating *COOH adsorption and CO formation.",
+        "zh": "将 O 引入 In–N₄ 的 Lewis 界面,把配位基元编辑为 In–N₂O₂,使 CO₂RR 产物由甲酸盐切换为 CO,在 −0.51 至 −1.10 V vs. RHE 电位窗口内 CO 选择性 >90%。原位光谱与 DFT 计算表明,In–N₂O₂ 提升了近邻碳位的电子密度,促进 *COOH 吸附与 CO 生成。"
+      }
+    },
+    {
+      "title": {
         "en": "Efficient harvesting of electricity, aromatic aldehydes and H₂ from lignin over nanoflower-like cobalt-based bifunctional electrocatalysts",
         "zh": "纳米花状钴基双功能电催化剂从木质素中高效收获电能、芳香醛与 H₂"
       },
       "authors": [
-        { "name": "Zhang, Y.", "self": true, "co_first": true },
-        { "name": "Gao, D.", "co_first": true },
-        { "name": "Ouyang, D." },
-        { "name": "Yan, B." },
-        { "name": "Zhao, X.", "corresponding": true }
+        {
+          "name": "Zhang, Y.",
+          "self": true,
+          "co_first": true
+        },
+        {
+          "name": "Gao, D.",
+          "co_first": true
+        },
+        {
+          "name": "Ouyang, D."
+        },
+        {
+          "name": "Yan, B."
+        },
+        {
+          "name": "Zhao, X.",
+          "corresponding": true
+        }
       ],
       "venue": "Green Chem.",
       "doi": "10.1039/d5gc01934f",
@@ -87,15 +166,37 @@
         "zh": "富含 {110} 晶面的内部中空 Cu₂O 纳米框架增强丙烯直接环氧化"
       },
       "authors": [
-        { "name": "Qiu, Y.", "co_first": true },
-        { "name": "Zhang, Y.", "self": true, "co_first": true },
-        { "name": "Zhang, R." },
-        { "name": "Huang, M." },
-        { "name": "Tan, K. B." },
-        { "name": "Zhan, G." },
-        { "name": "Li, Q." },
-        { "name": "Huang, J." },
-        { "name": "Fu, G.", "corresponding": true }
+        {
+          "name": "Qiu, Y.",
+          "co_first": true
+        },
+        {
+          "name": "Zhang, Y.",
+          "self": true,
+          "co_first": true
+        },
+        {
+          "name": "Zhang, R."
+        },
+        {
+          "name": "Huang, M."
+        },
+        {
+          "name": "Tan, K. B."
+        },
+        {
+          "name": "Zhan, G."
+        },
+        {
+          "name": "Li, Q."
+        },
+        {
+          "name": "Huang, J."
+        },
+        {
+          "name": "Fu, G.",
+          "corresponding": true
+        }
       ],
       "venue": "Nat. Commun.",
       "doi": "10.1038/s41467-025-63059-0",
@@ -112,15 +213,39 @@
         "zh": "Fe-V 原子对催化剂规避自由基生成实现稳健的氧还原与锌-空气电池"
       },
       "authors": [
-        { "name": "Ran, L.", "co_first": true },
-        { "name": "Zhang, Y.", "self": true, "co_first": true },
-        { "name": "Tong, W." },
-        { "name": "Chen, L." },
-        { "name": "Wang, M." },
-        { "name": "Zhou, H." },
-        { "name": "Farràs, P.", "corresponding": true },
-        { "name": "Chen, S.", "corresponding": true },
-        { "name": "Qiu, X.", "corresponding": true }
+        {
+          "name": "Ran, L.",
+          "co_first": true
+        },
+        {
+          "name": "Zhang, Y.",
+          "self": true,
+          "co_first": true
+        },
+        {
+          "name": "Tong, W."
+        },
+        {
+          "name": "Chen, L."
+        },
+        {
+          "name": "Wang, M."
+        },
+        {
+          "name": "Zhou, H."
+        },
+        {
+          "name": "Farràs, P.",
+          "corresponding": true
+        },
+        {
+          "name": "Chen, S.",
+          "corresponding": true
+        },
+        {
+          "name": "Qiu, X.",
+          "corresponding": true
+        }
       ],
       "venue": "Angew. Chem. Int. Ed.",
       "doi": "10.1002/anie.202514542",
@@ -137,21 +262,48 @@
         "zh": "单原子催化剂中低配位 Cu₁–N₂ 位点用于分子氧高效丙烯环氧化"
       },
       "authors": [
-        { "name": "Qiu, Y." },
-        { "name": "Zhang, Y.", "self": true },
-        { "name": "Xiao, S." },
-        { "name": "Tian, J." },
-        { "name": "Zhang, R." },
-        { "name": "Sun, L." },
-        { "name": "Tan, K. B." },
-        { "name": "Duh, Y.-S." },
-        { "name": "Li, Q." },
-        { "name": "Huang, J." },
-        { "name": "Fu, G.", "corresponding": true }
+        {
+          "name": "Qiu, Y."
+        },
+        {
+          "name": "Zhang, Y.",
+          "self": true
+        },
+        {
+          "name": "Xiao, S."
+        },
+        {
+          "name": "Tian, J."
+        },
+        {
+          "name": "Zhang, R."
+        },
+        {
+          "name": "Sun, L."
+        },
+        {
+          "name": "Tan, K. B."
+        },
+        {
+          "name": "Duh, Y.-S."
+        },
+        {
+          "name": "Li, Q."
+        },
+        {
+          "name": "Huang, J."
+        },
+        {
+          "name": "Fu, G.",
+          "corresponding": true
+        }
       ],
       "venue": "Nat. Catal.",
       "year": 2025,
-      "status": { "en": "under revision", "zh": "审稿中" },
+      "status": {
+        "en": "under revision",
+        "zh": "审稿中"
+      },
       "highlight": {
         "en": "A novel Cu₁–N₂ single-atom catalyst for direct propylene epoxidation, with record PO formation rates. Characterization and DFT show exclusive Cu–N coordination enhances electrophilic oxygen species formation, enabling selective C=C bond activation.",
         "zh": "提出新型 Cu₁–N₂ 单原子催化剂用于丙烯直接环氧化，PO 生成速率刷新纪录。表征与 DFT 表明 Cu–N 单一配位有利于亲电氧物种生成，从而实现 C=C 键的选择性活化。"
@@ -163,11 +315,23 @@
         "zh": "螯合剂辅助电沉积制备二维纳米材料用于生物质衍生醛的电催化氧化耦合 CO₂ 还原"
       },
       "authors": [
-        { "name": "Liu, X." },
-        { "name": "Zhang, Y.", "self": true },
-        { "name": "Li, Y." },
-        { "name": "Yan, B." },
-        { "name": "Zhao, X.", "corresponding": true }
+        {
+          "name": "Liu, X."
+        },
+        {
+          "name": "Zhang, Y.",
+          "self": true
+        },
+        {
+          "name": "Li, Y."
+        },
+        {
+          "name": "Yan, B."
+        },
+        {
+          "name": "Zhao, X.",
+          "corresponding": true
+        }
       ],
       "venue": "Appl. Catal. B: Environ.",
       "doi": "10.1016/j.apcatb.2025.125146",
@@ -180,14 +344,32 @@
         "zh": "由空气与木质素自驱动电化学合成过氧化氢"
       },
       "authors": [
-        { "name": "Li, Y." },
-        { "name": "Ouyang, D." },
-        { "name": "Liu, X." },
-        { "name": "Zhang, Y.", "self": true },
-        { "name": "Niu, Z." },
-        { "name": "Zhu, J. Y." },
-        { "name": "Pan, X." },
-        { "name": "Zhao, X.", "corresponding": true }
+        {
+          "name": "Li, Y."
+        },
+        {
+          "name": "Ouyang, D."
+        },
+        {
+          "name": "Liu, X."
+        },
+        {
+          "name": "Zhang, Y.",
+          "self": true
+        },
+        {
+          "name": "Niu, Z."
+        },
+        {
+          "name": "Zhu, J. Y."
+        },
+        {
+          "name": "Pan, X."
+        },
+        {
+          "name": "Zhao, X.",
+          "corresponding": true
+        }
       ],
       "venue": "Energy Environ. Sci.",
       "doi": "10.1039/d4ee06106c",
@@ -200,11 +382,23 @@
         "zh": "银基电催化剂耦合电化学转化升级生物质衍生呋喃醛"
       },
       "authors": [
-        { "name": "Dai, Z." },
-        { "name": "Liu, X." },
-        { "name": "Liu, N." },
-        { "name": "Zhang, Y.", "self": true },
-        { "name": "Zhao, X.", "corresponding": true }
+        {
+          "name": "Dai, Z."
+        },
+        {
+          "name": "Liu, X."
+        },
+        {
+          "name": "Liu, N."
+        },
+        {
+          "name": "Zhang, Y.",
+          "self": true
+        },
+        {
+          "name": "Zhao, X.",
+          "corresponding": true
+        }
       ],
       "venue": "Chem. Eng. J.",
       "doi": "10.1016/j.cej.2024.151001",
@@ -217,14 +411,32 @@
         "zh": "负载型 AgCuCl 纳米团簇作为双金属催化剂用于分子氧丙烯环氧化"
       },
       "authors": [
-        { "name": "Xiao, S." },
-        { "name": "Wei, C." },
-        { "name": "Li, R." },
-        { "name": "Qiu, Y." },
-        { "name": "Tan, K. B." },
-        { "name": "Zhang, Y.", "self": true },
-        { "name": "Huang, J.", "corresponding": true },
-        { "name": "Li, Q." }
+        {
+          "name": "Xiao, S."
+        },
+        {
+          "name": "Wei, C."
+        },
+        {
+          "name": "Li, R."
+        },
+        {
+          "name": "Qiu, Y."
+        },
+        {
+          "name": "Tan, K. B."
+        },
+        {
+          "name": "Zhang, Y.",
+          "self": true
+        },
+        {
+          "name": "Huang, J.",
+          "corresponding": true
+        },
+        {
+          "name": "Li, Q."
+        }
       ],
       "venue": "ACS Appl. Nano Mater.",
       "doi": "10.1021/acsanm.3c01362",
@@ -238,8 +450,14 @@
         "en": "Friends of Tsinghua – Shanghai Huayi Scholarship",
         "zh": "清华之友 — 上海华谊奖学金"
       },
-      "org": { "en": "Tsinghua University", "zh": "清华大学" },
-      "date": { "en": "Oct 2025", "zh": "2025.10" }
+      "org": {
+        "en": "Tsinghua University",
+        "zh": "清华大学"
+      },
+      "date": {
+        "en": "Oct 2025",
+        "zh": "2025.10"
+      }
     },
     {
       "title": {
@@ -250,37 +468,94 @@
         "en": "Chinese Society of Electrochemistry",
         "zh": "中国电化学学会"
       },
-      "date": { "en": "Oct 2024", "zh": "2024.10" }
+      "date": {
+        "en": "Oct 2024",
+        "zh": "2024.10"
+      }
     },
     {
-      "title": { "en": "Teng-Teng Scholarship", "zh": "滕藤奖学金" },
-      "org": { "en": "Tsinghua University", "zh": "清华大学" },
-      "date": { "en": "Oct 2024", "zh": "2024.10" }
+      "title": {
+        "en": "Teng-Teng Scholarship",
+        "zh": "滕藤奖学金"
+      },
+      "org": {
+        "en": "Tsinghua University",
+        "zh": "清华大学"
+      },
+      "date": {
+        "en": "Oct 2024",
+        "zh": "2024.10"
+      }
     },
     {
-      "title": { "en": "Gao-Yingshi Scholarship", "zh": "高英士奖学金" },
-      "org": { "en": "Tsinghua University", "zh": "清华大学" },
-      "date": { "en": "Oct 2024", "zh": "2024.10" }
+      "title": {
+        "en": "Gao-Yingshi Scholarship",
+        "zh": "高英士奖学金"
+      },
+      "org": {
+        "en": "Tsinghua University",
+        "zh": "清华大学"
+      },
+      "date": {
+        "en": "Oct 2024",
+        "zh": "2024.10"
+      }
     },
     {
-      "title": { "en": "Future Scholars Scholarship", "zh": "未来学者奖学金" },
-      "org": { "en": "Tsinghua University", "zh": "清华大学" },
-      "date": { "en": "Sep 2023", "zh": "2023.09" }
+      "title": {
+        "en": "Future Scholars Scholarship",
+        "zh": "未来学者奖学金"
+      },
+      "org": {
+        "en": "Tsinghua University",
+        "zh": "清华大学"
+      },
+      "date": {
+        "en": "Sep 2023",
+        "zh": "2023.09"
+      }
     },
     {
-      "title": { "en": "National Scholarship", "zh": "国家奖学金" },
-      "org": { "en": "Xiamen University", "zh": "厦门大学" },
-      "date": { "en": "Nov 2022", "zh": "2022.11" }
+      "title": {
+        "en": "National Scholarship",
+        "zh": "国家奖学金"
+      },
+      "org": {
+        "en": "Xiamen University",
+        "zh": "厦门大学"
+      },
+      "date": {
+        "en": "Nov 2022",
+        "zh": "2022.11"
+      }
     },
     {
-      "title": { "en": "National Scholarship", "zh": "国家奖学金" },
-      "org": { "en": "Xiamen University", "zh": "厦门大学" },
-      "date": { "en": "Nov 2021", "zh": "2021.11" }
+      "title": {
+        "en": "National Scholarship",
+        "zh": "国家奖学金"
+      },
+      "org": {
+        "en": "Xiamen University",
+        "zh": "厦门大学"
+      },
+      "date": {
+        "en": "Nov 2021",
+        "zh": "2021.11"
+      }
     },
     {
-      "title": { "en": "Maotai Scholarship", "zh": "茅台奖学金" },
-      "org": { "en": "Xiamen University", "zh": "厦门大学" },
-      "date": { "en": "Nov 2020", "zh": "2020.11" }
+      "title": {
+        "en": "Maotai Scholarship",
+        "zh": "茅台奖学金"
+      },
+      "org": {
+        "en": "Xiamen University",
+        "zh": "厦门大学"
+      },
+      "date": {
+        "en": "Nov 2020",
+        "zh": "2020.11"
+      }
     }
   ],
   "skills": {
@@ -294,10 +569,33 @@
         "zh": "表面催化过程中原子级分散位点催化剂的构效关系"
       }
     ],
-    "computation": ["VASP", "CP2K", "Gaussian", "Material Studio", "VESTA", "vaspkit", "FDMNES", "Demeter"],
-    "characterization": ["XAS", "XRD", "SEM", "TEM", "Jade", "Advantage"],
-    "engineering": ["AutoCAD", "SolidWorks"],
-    "programming": ["Python", "MATLAB", "C"]
+    "computation": [
+      "VASP",
+      "CP2K",
+      "Gaussian",
+      "Material Studio",
+      "VESTA",
+      "vaspkit",
+      "FDMNES",
+      "Demeter"
+    ],
+    "characterization": [
+      "XAS",
+      "XRD",
+      "SEM",
+      "TEM",
+      "Jade",
+      "Advantage"
+    ],
+    "engineering": [
+      "AutoCAD",
+      "SolidWorks"
+    ],
+    "programming": [
+      "Python",
+      "MATLAB",
+      "C"
+    ]
   },
   "summary": [
     {
