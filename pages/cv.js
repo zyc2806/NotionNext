@@ -50,6 +50,7 @@ const UI = {
     nav: {
       about: 'About',
       education: 'Education',
+      research: 'Research',
       publications: 'Publications',
       awards: 'Awards',
       skills: 'Skills'
@@ -57,6 +58,7 @@ const UI = {
     sectionTitles: {
       about: 'About',
       education: 'Education',
+      research: 'Research Experience',
       publications: 'Publications',
       awards: 'Awards & Scholarships',
       skills: 'Skills & Interests'
@@ -64,6 +66,7 @@ const UI = {
     skillsLabels: {
       interests: 'Research interests',
       computation: 'Computation',
+      ml_potentials: 'ML potentials',
       characterization: 'Characterization',
       engineering: 'Engineering',
       programming: 'Programming',
@@ -81,6 +84,7 @@ const UI = {
     nav: {
       about: '简介',
       education: '教育经历',
+      research: '研究经历',
       publications: '论文发表',
       awards: '奖励荣誉',
       skills: '技能与方向'
@@ -88,6 +92,7 @@ const UI = {
     sectionTitles: {
       about: '简介',
       education: '教育经历',
+      research: '研究经历',
       publications: '论文发表',
       awards: '奖励与荣誉',
       skills: '技能与研究方向'
@@ -95,6 +100,7 @@ const UI = {
     skillsLabels: {
       interests: '研究方向',
       computation: '计算',
+      ml_potentials: '机器学习势',
       characterization: '表征',
       engineering: '工程',
       programming: '编程',
@@ -193,7 +199,7 @@ const Section = ({ id, title, children }) => (
 )
 
 export default function CV() {
-  const { profile, education, publications, awards, skills, summary } = cv
+  const { profile, education, research, publications, awards, skills, summary } = cv
 
   // Default 'en' on the server / first render to keep SSR markup stable.
   // After hydration, restore the user's last choice from localStorage.
@@ -329,6 +335,7 @@ export default function CV() {
                 {[
                   ['about', ui.nav.about],
                   ['education', ui.nav.education],
+                  ['research', ui.nav.research],
                   ['publications', ui.nav.publications],
                   ['awards', ui.nav.awards],
                   ['skills', ui.nav.skills]
@@ -419,6 +426,26 @@ export default function CV() {
               </ul>
             </Section>
 
+            {research?.length > 0 && (
+              <Section id="research" title={ui.sectionTitles.research}>
+                <ul className="space-y-5">
+                  {research.map((r, i) => (
+                    <li key={i}>
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1">
+                        <div className="font-semibold text-gray-900 dark:text-white">{t(r.title, lang)}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-500 font-sans whitespace-nowrap sm:ml-4">
+                          {t(r.date, lang)}
+                        </div>
+                      </div>
+                      <p className="text-[15px] text-gray-700 dark:text-gray-300 leading-relaxed mt-1">
+                        {formatScientific(t(r.description, lang))}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            )}
+
             <Section id="publications" title={ui.sectionTitles.publications}>
               {renderPubLegend(lang)}
               {years.map(year => (
@@ -479,6 +506,7 @@ export default function CV() {
               )}
               {[
                 [ui.skillsLabels.computation, skills.computation],
+                [ui.skillsLabels.ml_potentials, skills.ml_potentials],
                 [ui.skillsLabels.characterization, skills.characterization],
                 [ui.skillsLabels.engineering, skills.engineering],
                 [ui.skillsLabels.programming, skills.programming]

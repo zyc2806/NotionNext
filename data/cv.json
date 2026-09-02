@@ -11,12 +11,12 @@
       "zh": "清华大学"
     },
     "tagline": {
-      "en": "Electrocatalysis · Atomically Dispersed Sites · Oxygen Reduction Reaction",
-      "zh": "电催化 · 原子级分散位点 · 氧还原反应"
+      "en": "Electrocatalysis · Atomically Dispersed Sites · Machine-Learning Potentials",
+      "zh": "电催化 · 原子级分散位点 · 机器学习势函数"
     },
     "bio": {
-      "en": "I am a Ph.D. candidate in Chemical Engineering at Tsinghua University. My research focuses on non-precious metal catalysts for the oxygen reduction reaction (ORR), bridging experimental synthesis and characterization with density-functional theory to uncover structure–activity relationships at atomically dispersed active sites in surface catalytic processes.",
-      "zh": "我是清华大学化学工程系博士研究生，研究方向为面向氧还原反应（ORR）的非贵金属催化剂；通过实验合成与表征结合密度泛函理论，揭示表面催化过程中原子级分散活性位点的构效关系。"
+      "en": "I am a Ph.D. candidate in Chemical Engineering at Tsinghua University. My research focuses on non-precious metal catalysts for the oxygen reduction reaction (ORR), bridging experimental synthesis and characterization with density-functional theory to uncover structure–activity relationships at atomically dispersed active sites. I also develop machine-learning interatomic potentials and active-learning workflows to accelerate first-principles simulations of catalytic systems.",
+      "zh": "我是清华大学化学工程系博士研究生，研究方向为面向氧还原反应（ORR）的非贵金属催化剂；通过实验合成与表征结合密度泛函理论，揭示原子级分散活性位点的构效关系。同时发展机器学习势函数与主动学习流程，用于加速催化体系的第一性原理模拟。"
     },
     "email": "zhang-yc23@mails.tsinghua.edu.cn",
     "phone": "+86 180 5569 2939",
@@ -48,8 +48,8 @@
         "zh": "2023.06 – 至今"
       },
       "details": {
-        "en": "GPA 3.99 / 4.00 · Class rank 3 / 86",
-        "zh": "GPA 3.99 / 4.00 · 专业排名 3 / 86"
+        "en": "GPA 3.99 / 4.00 · Class rank 3 / 86 · Advisor: Assoc. Prof. Xuebing Zhao",
+        "zh": "GPA 3.99 / 4.00 · 专业排名 3 / 86 · 导师：赵雪冰 副教授"
       }
     },
     {
@@ -58,8 +58,8 @@
         "zh": "厦门大学"
       },
       "degree": {
-        "en": "B.Sc., Chemical Engineering",
-        "zh": "化学工程，工学学士"
+        "en": "B.Eng., Chemical Engineering",
+        "zh": "化学工程与工艺，工学学士"
       },
       "date": {
         "en": "Sep 2019 – Jun 2023",
@@ -68,6 +68,50 @@
       "details": {
         "en": "GPA 3.82 / 4.00 · Class rank 1 / 42",
         "zh": "GPA 3.82 / 4.00 · 专业排名 1 / 42"
+      }
+    }
+  ],
+  "research": [
+    {
+      "title": {
+        "en": "DFT-guided design of atomically dispersed electrocatalysts",
+        "zh": "原子分散电催化剂的 DFT 引导设计"
+      },
+      "date": {
+        "en": "2023 – Present",
+        "zh": "2023 – 至今"
+      },
+      "description": {
+        "en": "Mechanistic DFT (VASP / CP2K) for single-atom and atomic-pair catalysts in ORR, CO₂RR and propylene epoxidation, in close collaboration with experimental groups: reaction pathways, free-energy diagrams, electronic-structure descriptors, and comparison with in situ spectroscopy.",
+        "zh": "与实验课题组紧密合作，承担单原子与双原子催化剂在 ORR、CO₂RR 及丙烯环氧化中的机理计算（VASP / CP2K）：反应路径、自由能台阶、电子结构描述符，并与原位谱学结果对照。"
+      }
+    },
+    {
+      "title": {
+        "en": "Machine-learning potentials for accelerated catalysis simulation",
+        "zh": "机器学习势函数加速催化模拟"
+      },
+      "date": {
+        "en": "2025 – Present",
+        "zh": "2025 – 至今"
+      },
+      "description": {
+        "en": "Built an active-learning geometry-optimization loop (MLP pre-relaxation → DFT → on-the-fly fine-tuning): on a 75-atom magnetic Fe–N–C ORR catalyst, fine-tuned MACE cut DFT ionic steps from 128 to 66–73, and revealed that DPA4-Air pre-relaxation quenches the Fe spin state. Developed dataset-audit and committee active-learning protocols for MACE / DPA4 fine-tuning; MLP-driven MD of Li-ion electrolytes and molten salts.",
+        "zh": "搭建主动学习几何优化闭环（势函数预弛豫 → DFT → 在线微调）：在 75 原子磁性 Fe–N–C ORR 催化剂上，微调后的 MACE 将 DFT 离子步从 128 步降至 66–73 步，并发现 DPA4-Air 预弛豫会淬灭 Fe 自旋态。建立数据集审计与委员会式主动学习流程，用于 MACE / DPA4 微调；以机器学习势驱动锂离子电解液与熔盐的分子动力学。"
+      }
+    },
+    {
+      "title": {
+        "en": "Computational workflow and software projects",
+        "zh": "计算工作流与软件项目"
+      },
+      "date": {
+        "en": "2025 – Present",
+        "zh": "2025 – 至今"
+      },
+      "description": {
+        "en": "Solid programming background. Developed an adsorbate-placement tool (particle-swarm search with rigid-ring kinematics) for generating DFT initial structures, an atomic-structure visualization tool, and an LLM-agent toolkit that automates VASP / CP2K / LAMMPS input generation, HPC submission and result verification.",
+        "zh": "具备扎实的代码基础。开发了吸附构型搜索工具（粒子群搜索 + 刚性环运动学，用于生成 DFT 初始结构）、原子结构可视化工具，以及面向 VASP / CP2K / LAMMPS 的 LLM 智能体工具集，覆盖输入生成、超算提交与结果核验。"
       }
     }
   ],
@@ -565,8 +609,12 @@
         "zh": "面向氧还原反应（ORR）的非贵金属催化剂的实验与理论研究"
       },
       {
-        "en": "Structure–activity relationships of catalysts with atomically dispersed sites in surface catalytic processes",
-        "zh": "表面催化过程中原子级分散位点催化剂的构效关系"
+        "en": "Structure–activity relationships of catalysts with atomically dispersed sites",
+        "zh": "原子级分散位点催化剂的构效关系"
+      },
+      {
+        "en": "Machine-learning interatomic potentials and active-learning workflows for accelerating first-principles catalysis simulations",
+        "zh": "面向催化第一性原理模拟加速的机器学习势函数与主动学习流程"
       }
     ],
     "computation": [
@@ -574,16 +622,28 @@
       "CP2K",
       "Gaussian",
       "Material Studio",
-      "VESTA",
+      "LAMMPS",
+      "GROMACS",
+      "ASE",
+      "pymatgen",
+      "Multiwfn",
       "vaspkit",
-      "FDMNES",
-      "Demeter"
+      "VESTA"
+    ],
+    "ml_potentials": [
+      "MACE",
+      "DeePMD-kit / DPA4",
+      "NEP / GPUMD"
     ],
     "characterization": [
       "XAS",
       "XRD",
+      "XPS",
       "SEM",
       "TEM",
+      "Demeter",
+      "FDMNES",
+      "larch",
       "Jade",
       "Advantage"
     ],
@@ -593,30 +653,28 @@
     ],
     "programming": [
       "Python",
+      "NumPy",
+      "PyTorch",
+      "ASE",
+      "pymatgen",
+      "Bash / SLURM",
+      "Git",
       "MATLAB",
       "C"
     ]
   },
   "summary": [
     {
-      "en": "Top-ranked student in Chemical Engineering at both Xiamen University and Tsinghua University.",
-      "zh": "在厦门大学与清华大学化学工程专业均名列前茅。"
+      "en": "Proficient in VASP, CP2K, Gaussian, LAMMPS and machine-learning potentials (MACE, DPA4, GPUMD), including fine-tuning and active-learning workflows.",
+      "zh": "熟练使用 VASP、CP2K、Gaussian、LAMMPS 及机器学习势函数（MACE、DPA4、GPUMD），掌握微调与主动学习流程。"
     },
     {
-      "en": "Hands-on experience with materials synthesis and a wide range of characterization tools (XAS, XRD, SEM, TEM, …).",
-      "zh": "具备材料合成与多种表征手段（XAS、XRD、SEM、TEM 等）的动手经验。"
+      "en": "Experienced in both experiment (synthesis, electrochemistry, XAS / XRD / SEM / TEM) and theory; skilled in communicating with experimental collaborators.",
+      "zh": "兼具实验（合成、电化学测试、XAS / XRD / SEM / TEM）与理论计算经验，能与实验合作者高效沟通。"
     },
     {
-      "en": "Proficient in DFT and AIMD workflows using VASP, CP2K, Gaussian, VESTA, vaspkit and related toolchains.",
-      "zh": "熟练使用 VASP、CP2K、Gaussian、VESTA、vaspkit 等工具链开展 DFT 与 AIMD 工作流。"
-    },
-    {
-      "en": "Comfortable bridging experimental and theoretical work, communicating effectively with experimental collaborators.",
-      "zh": "擅长打通实验与理论研究，能够与实验合作者高效沟通。"
-    },
-    {
-      "en": "Programming in Python, MATLAB and C; team player with strong execution under deadlines.",
-      "zh": "熟练使用 Python、MATLAB 与 C 编程；团队协作良好，能在 deadline 下高效推进任务。"
+      "en": "Solid programming background: Python (NumPy, PyTorch, ASE, pymatgen), Bash / SLURM, MATLAB and C; builds automated simulation workflows.",
+      "zh": "代码基础扎实：Python（NumPy、PyTorch、ASE、pymatgen）、Bash / SLURM、MATLAB 与 C；能独立搭建自动化模拟流程。"
     }
   ]
 }
