@@ -173,7 +173,7 @@ function Hero3D() {
     <div className={'zs-hero3d' + (ready ? ' on' : '')}>
       <img className="zs-hero-fallback" src="/company/img/hero.webp" alt="" />
       <div ref={ref} className="zs-hero-canvas" />
-      <span className="zs-hero-hint">拖动旋转 · 单原子催化位点</span>
+      <span className="zs-hero-hint">可拖动 · Co–N₄ 位点与差分电荷密度</span>
     </div>
   )
 }
@@ -213,23 +213,22 @@ function Contact() {
   }
   return (
     <aside className="zs-float" aria-label="联系方式">
-      <div className="zs-float-head"><span className="zs-dot" />在线接单</div>
-      <p className="zs-float-t">免费评估 · 透明报价</p>
+      <div className="zs-float-head"><span className="zs-dot" />计算咨询</div>
+      <p className="zs-float-t">评估不收费，按计算量报价</p>
       <button className="zs-float-mail" onClick={copy} title="点击复制">
         <span>{co.email}</span>
         <em>{copied ? '已复制' : '复制'}</em>
       </button>
       <a className="zs-float-btn" href={'mailto:' + co.email + '?subject=' + encodeURIComponent('计算需求咨询')}>发邮件咨询</a>
-      <p className="zs-float-s">发来体系与需求，一般当天回复</p>
+      <p className="zs-float-s">点邮箱可复制</p>
     </aside>
   )
 }
 
-const Title = ({ no, zh, en }) => (
+const Title = ({ no, id }) => (
   <div className="zs-title reveal">
-    <span className="zs-no">{no}</span>
-    <h2>{zh}</h2>
-    <span className="zs-en">{en}</span>
+    <span className="zs-no">{no} · {co.sections[id][0]}</span>
+    <h2>{co.sections[id][1]}</h2>
   </div>
 )
 
@@ -247,7 +246,7 @@ export default function Company() {
   return (
     <div className="zs-root">
       <Head>
-        <title>{co.name} · 第一性原理与分子动力学计算服务</title>
+        <title>{co.short} · 第一性原理与分子动力学计算服务</title>
         <meta name="description" content="北京智算分子科技有限公司提供 DFT、从头算分子动力学、机器学习势函数计算服务，覆盖催化、电子结构、电池材料与分子计算。清华博士亲自计算，可开发票。" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/company/mark.svg" />
@@ -260,9 +259,9 @@ export default function Company() {
         </a>
         <nav>
           <a href="#services">计算服务</a>
-          <a href="#why">我们的优势</a>
+          <a href="#why">特点</a>
           <a href="#cases">案例</a>
-          <a href="#about">关于</a>
+          <a href="#about">创始人</a>
           <a className="zs-nav-cta" href={'mailto:' + co.email}>联系我们</a>
         </nav>
       </header>
@@ -280,8 +279,8 @@ export default function Company() {
               {co.hero.tags.map((t, i) => <span key={t} className="zs-tag"><i>0{i + 1}</i>{t}</span>)}
             </div>
             <div className="zs-hero-cta">
-              <a className="zs-btn" href="#services">查看可算内容</a>
-              <a className="zs-btn ghost" href={'mailto:' + co.email}>免费评估需求</a>
+              <a className="zs-btn" href="#services">能算什么</a>
+              <a className="zs-btn ghost" href={'mailto:' + co.email}>发邮件咨询</a>
             </div>
           </div>
           <Hero3D />
@@ -296,8 +295,22 @@ export default function Company() {
         </div>
       </section>
 
+      <section className="zs-strip" id="schools">
+        <p className="zs-strip-t">{co.schoolsTitle}</p>
+        <div className="zs-marquee">
+          <div className="zs-track">
+            {[0, 1].map(k => co.schools.map(x => (
+              <div key={k + x.name} className="zs-school" aria-hidden={k === 1}>
+                <img src={'/company/logos/' + x.logo} alt={k ? '' : x.name} />
+                <span>{x.name}</span>
+              </div>
+            )))}
+          </div>
+        </div>
+      </section>
+
       <section className="zs-sec" id="services">
-        <Title no="01" zh="可以计算的内容" en="What we compute" />
+        <Title no="01" id="services" />
         <div className="zs-svc">
           {co.services.map((s, i) => (
             <article key={s.key} className="zs-card reveal" style={{ transitionDelay: (i % 3) * 80 + 'ms' }}>
@@ -313,7 +326,7 @@ export default function Company() {
       </section>
 
       <section className="zs-sec zs-why-wrap" id="why">
-        <Title no="02" zh="为什么选择我们" en="Why us" />
+        <Title no="02" id="why" />
         <div className="zs-why">
           {co.advantages.map((a, i) => (
             <div key={a.no} className={'zs-why-c reveal' + (i < 3 ? ' key' : '')} style={{ transitionDelay: i * 80 + 'ms' }}>
@@ -326,7 +339,7 @@ export default function Company() {
       </section>
 
       <section className="zs-sec" id="cases">
-        <Title no="03" zh="计算案例" en="Selected work" />
+        <Title no="03" id="cases" />
         <div className="zs-cases">
           {co.cases.map((c, i) => (
             <figure key={c.title} className={'zs-case reveal c' + i}>
@@ -337,21 +350,8 @@ export default function Company() {
         </div>
       </section>
 
-      <section className="zs-sec">
-        <Title no="04" zh="服务过的高校与院所" en="Trusted by researchers from" />
-        <div className="zs-schools reveal">
-          {co.schools.map(s => (
-            <div key={s.name} className="zs-school">
-              <img src={'/company/logos/' + s.logo} alt={s.name} />
-              <span>{s.name}</span>
-            </div>
-          ))}
-        </div>
-        <p className="zs-note">以上为委托过计算服务的部分单位，按单位列出，不涉及具体课题信息。</p>
-      </section>
-
       <section className="zs-sec" id="about">
-        <Title no="05" zh="关于创始人" en="Founder" />
+        <Title no="04" id="about" />
         <div className="zs-founder reveal">
           <div className="zs-photo"><img src={co.founder.photo} alt={co.founder.name} /></div>
           <div>
@@ -363,7 +363,7 @@ export default function Company() {
       </section>
 
       <section className="zs-sec">
-        <Title no="06" zh="合作流程" en="How it works" />
+        <Title no="05" id="steps" />
         <ol className="zs-steps">
           {co.steps.map((s, i) => (
             <li key={s.title} className="reveal" style={{ transitionDelay: i * 90 + 'ms' }}>
@@ -375,8 +375,8 @@ export default function Company() {
         </ol>
         <div className="zs-cta reveal">
           <div>
-            <h3>把你的体系发过来，先免费评估</h3>
-            <p>说明材料体系、想要的性质和参考文献，我们会给出计算方案、周期和报价。</p>
+            <h3>{co.cta.title}</h3>
+            <p>{co.cta.text}</p>
           </div>
           <a className="zs-btn" href={'mailto:' + co.email + '?subject=' + encodeURIComponent('计算需求咨询')}>{co.email}</a>
         </div>
@@ -430,7 +430,7 @@ const CSS = `
         .zs-nav nav a:hover { color: var(--ink); }
         .zs-nav-cta { padding: 7px 16px; border-radius: 999px; background: var(--ink); color: #fff !important; }
 
-        .zs-hero { position: relative; padding: 120px clamp(16px, 5vw, 72px) 40px; overflow: hidden; }
+        .zs-hero { position: relative; padding: 100px clamp(16px, 5vw, 72px) 40px; overflow: hidden; }
         .zs-grid-bg { position: absolute; inset: 0; background-image: radial-gradient(rgba(47,91,255,.16) 1px, transparent 1.2px);
           background-size: 22px 22px; mask-image: radial-gradient(ellipse 70% 60% at 65% 40%, #000 20%, transparent 75%);
           -webkit-mask-image: radial-gradient(ellipse 70% 60% at 65% 40%, #000 20%, transparent 75%); pointer-events: none; }
@@ -455,7 +455,7 @@ const CSS = `
         .zs-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -12px rgba(47,91,255,.7); }
         .zs-btn.ghost { background: #fff; color: var(--ink) !important; border: 1px solid var(--line); box-shadow: none; }
 
-        .zs-hero3d { position: relative; aspect-ratio: 1 / 1; max-height: 620px; width: 100%; }
+        .zs-hero3d { position: relative; aspect-ratio: 1 / 1; max-height: 560px; width: 100%; margin: 0 auto; }
         .zs-hero-canvas, .zs-hero-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
         .zs-hero-fallback { object-fit: contain; transition: opacity .8s; }
         .zs-hero-canvas { opacity: 0; transition: opacity .8s; cursor: grab; }
@@ -473,9 +473,9 @@ const CSS = `
         .zs-stat > span { font-size: 14px; color: var(--sub); }
 
         .zs-sec { max-width: 1240px; margin: 0 auto; padding: 110px clamp(16px, 5vw, 72px) 0; box-sizing: content-box; }
-        .zs-title { display: flex; align-items: baseline; gap: 16px; margin-bottom: 44px; flex-wrap: wrap; }
-        .zs-no { font-size: 13px; color: var(--b1); padding: 3px 9px; border: 1px solid rgba(47,91,255,.3); border-radius: 6px; }
-        .zs-title h2 { font-size: clamp(26px, 3vw, 36px); font-weight: 700; }
+        .zs-title { margin-bottom: 44px; max-width: 760px; }
+        .zs-no { display: inline-block; font-size: 12.5px; color: var(--b1); margin-bottom: 14px; }
+        .zs-title h2 { font-size: clamp(24px, 2.8vw, 36px); font-weight: 700; line-height: 1.3; letter-spacing: -.005em; }
         .zs-en { font-size: 13px; color: var(--mute); text-transform: uppercase; }
 
         .zs-svc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
@@ -515,6 +515,13 @@ const CSS = `
         .zs-case figcaption span { font-size: 11.5px; color: var(--b1); }
         .zs-case figcaption b { font-size: 17px; }
 
+        .zs-strip { padding: 64px 0 0; }
+        .zs-strip-t { text-align: center; font-size: 13.5px; color: var(--mute); margin-bottom: 22px !important; }
+        .zs-marquee { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+        .zs-track { display: flex; gap: 14px; width: max-content; animation: zsScroll 48s linear infinite; }
+        .zs-marquee:hover .zs-track { animation-play-state: paused; }
+        @keyframes zsScroll { to { transform: translateX(-50%); } }
+        .zs-track .zs-school { flex: none; width: 150px; }
         .zs-schools { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
         .zs-school { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 22px 10px 16px; border: 1px solid var(--line); border-radius: 16px; background: #fff; transition: all .3s; }
         .zs-school img { width: 64px; height: 64px; object-fit: contain; filter: grayscale(1); opacity: .62; transition: all .35s; }
@@ -573,7 +580,7 @@ const CSS = `
         .reveal { opacity: 0; transform: translateY(26px); }
         .reveal.in { opacity: 1; transform: none; transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
         .zs-card.reveal.in:hover { transform: translateY(-6px); }
-        @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } .zs-orb { animation: none; } }
+        @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } .zs-orb, .zs-track { animation: none; } }
 
                 @media (max-width: 1600px) { .zs-float { width: 214px; padding: 14px; } .zs-float-s { display: none; } }
         @media (pointer: coarse) { .zs-hero-hint { display: none; } }
@@ -600,6 +607,7 @@ const CSS = `
           .zs-stat { padding: 18px; }
           .zs-stat b { font-size: 30px; }
           .zs-schools { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+          .zs-track .zs-school { width: 118px; }
           .zs-school img { width: 48px; height: 48px; }
           .zs-school span { font-size: 11.5px; }
           .zs-steps { grid-template-columns: 1fr; }
