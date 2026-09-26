@@ -461,10 +461,11 @@ const CSS = `
         .zs-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -12px rgba(47,91,255,.7); }
         .zs-btn.ghost { background: #fff; color: var(--ink) !important; border: 1px solid var(--line); box-shadow: none; }
 
-        .zs-hero3d { position: absolute; z-index: 1; top: 50%; right: -10vw; transform: translateY(-50%); width: min(92vw, 1250px); height: 820px; }
+        .zs-hero3d { position: absolute; z-index: 1; top: 50%; right: -12vw; transform: translateY(-50%); width: min(100vw, 1400px); height: 940px; }
         .zs-hero3d .zs-hero-canvas, .zs-hero3d .zs-hero-fallback {
-          mask-image: linear-gradient(90deg, transparent 8%, rgba(0,0,0,.18) 26%, rgba(0,0,0,.55) 40%, #000 52%);
-          -webkit-mask-image: linear-gradient(90deg, transparent 8%, rgba(0,0,0,.18) 26%, rgba(0,0,0,.55) 40%, #000 52%); }
+          mask-image: linear-gradient(90deg, transparent 8%, rgba(0,0,0,.18) 26%, rgba(0,0,0,.55) 40%, #000 52%), linear-gradient(180deg, transparent 0%, #000 12%, #000 76%, transparent 96%);
+          -webkit-mask-image: linear-gradient(90deg, transparent 8%, rgba(0,0,0,.18) 26%, rgba(0,0,0,.55) 40%, #000 52%), linear-gradient(180deg, transparent 0%, #000 12%, #000 76%, transparent 96%);
+          mask-composite: intersect; -webkit-mask-composite: source-in; }
         .zs-lead { text-shadow: 0 0 10px #fff, 0 0 4px #fff; }
         .zs-hero-canvas, .zs-hero-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
         .zs-hero-fallback { object-fit: contain; transition: opacity .8s; }
