@@ -26,8 +26,8 @@ const Mark = ({ size = 34 }) => (
   <svg viewBox="0 0 64 64" width={size} height={size} aria-hidden="true">
     <defs>
       <linearGradient id="zsg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stopColor="#2F5BFF" />
-        <stop offset="1" stopColor="#14C8D8" />
+        <stop offset="0" stopColor="#0B1B33" />
+        <stop offset="1" stopColor="#2A4F8A" />
       </linearGradient>
     </defs>
     <path d="M32 6 L54.5 19 L54.5 45 L32 58 L9.5 45 L9.5 19 Z" fill="none" stroke="url(#zsg)" strokeWidth="4" strokeLinejoin="round" />
@@ -38,9 +38,9 @@ const Mark = ({ size = 34 }) => (
     </g>
     <circle cx="32" cy="32" r="7.5" fill="url(#zsg)" />
     <circle cx="32" cy="32" r="3" fill="#fff" />
-    <circle cx="54.5" cy="19" r="3.6" fill="#2F5BFF" />
-    <circle cx="9.5" cy="19" r="3.6" fill="#14C8D8" />
-    <circle cx="32" cy="58" r="3.6" fill="#1E8FEA" />
+    <circle cx="54.5" cy="19" r="3.6" fill="#1F3A68" />
+    <circle cx="9.5" cy="19" r="3.6" fill="#2A4F8A" />
+    <circle cx="32" cy="58" r="3.6" fill="#1F3A68" />
   </svg>
 )
 
@@ -267,17 +267,15 @@ export default function Company() {
       </header>
 
       <section className="zs-hero" id="top">
-        <div className="zs-grid-bg" />
-        <div className="zs-orb zs-orb1" />
-        <div className="zs-orb zs-orb2" />
         <div className="zs-hero-in">
           <div className="zs-hero-text">
             <p className="zs-eyebrow">{co.hero.eyebrow}</p>
-            <h1>{co.hero.title.slice(0, -1).map(t => <span key={t} className="zs-h1l">{t}</span>)}<span className="zs-grad zs-h1l">{co.hero.title[co.hero.title.length - 1]}</span></h1>
+            <h1>{co.hero.title.map(t => <span key={t} className="zs-h1l">{t}</span>)}</h1>
+            <p className="zs-hero-en">{co.hero.en}</p>
             <p className="zs-lead">{co.hero.lead}</p>
-            <div className="zs-tags">
-              {co.hero.tags.map((t, i) => <span key={t} className="zs-tag"><i>0{i + 1}</i>{t}</span>)}
-            </div>
+            <dl className="zs-keys">
+              {co.hero.tags.map(k => <div key={k.t}><dt>{k.t}</dt><dd>{k.d}</dd></div>)}
+            </dl>
             <div className="zs-hero-cta">
               <a className="zs-btn" href="#services">能算什么</a>
               <a className="zs-btn ghost" href={'mailto:' + co.email}>发邮件咨询</a>
@@ -635,6 +633,50 @@ const CSS = `
           .zs-float-mail { flex: 1; min-width: 0; }
           .zs-float-mail span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
           .zs-float-btn { margin-top: 0; padding: 9px 14px; flex: none; }
+        }
+        /* ---- 学术风 ---- */
+        .zs-root { --b1: #1f3a68; --b2: #1f3a68; --grad: #1f3a68; --serif: "Source Han Serif SC", "Noto Serif SC", "Songti SC", "STSong", "SimSun", "Times New Roman", serif; }
+        .zs-root h1, .zs-root h2, .zs-root h3, .zs-stat b, .zs-brand-t b, .zs-keys dt, .zs-badge b { font-family: var(--serif); }
+        .zs-grad { background: none; color: inherit; }
+        .zs-eyebrow { font-family: var(--serif); font-size: 14px; letter-spacing: .14em; color: var(--sub); }
+        .zs-eyebrow::before { background: var(--ink); width: 36px; height: 1px; }
+        .zs-hero h1 { font-weight: 700; letter-spacing: .04em; line-height: 1.25; font-size: clamp(30px, 3.9vw, 56px); }
+        .zs-hero-en { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-size: 17px; color: var(--sub); margin-top: 16px !important; max-width: 30em; line-height: 1.5; }
+        .zs-lead { margin-top: 20px; font-size: 16px; max-width: 29em; }
+        .zs-hero-en { max-width: 27em !important; }
+        .zs-keys { display: grid; grid-template-columns: repeat(3, auto); gap: 0; margin: 30px 0 0; padding: 16px 0 0; border-top: 1px solid var(--ink); max-width: 560px; }
+        .zs-keys > div { padding-right: 22px; margin-right: 22px; border-right: 1px solid var(--line); }
+        .zs-keys > div:last-child { border-right: 0; margin-right: 0; }
+        .zs-keys dt { font-size: 19px; font-weight: 700; }
+        .zs-keys dd { margin: 4px 0 0; font-size: 13.5px; color: var(--sub); white-space: nowrap; }
+        .zs-keys { max-width: none !important; width: max-content; }
+        .zs-btn { border-radius: 3px; box-shadow: none; background: var(--ink); padding: 12px 24px; }
+        .zs-btn:hover { transform: none; box-shadow: none; background: #1f3a68; }
+        .zs-btn.ghost { border-color: var(--ink); }
+        .zs-stat b { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: var(--ink); font-weight: 700; }
+        .zs-stats, .zs-card, .zs-why-c, .zs-case, .zs-school, .zs-founder, .zs-steps, .zs-badge, .zs-cta { border-radius: 4px; }
+        .zs-no { color: var(--sub); font-family: var(--serif); letter-spacing: .12em; }
+        .zs-card li::before { background: var(--ink); border-radius: 0; width: 5px; height: 5px; }
+        .zs-why-c::after { height: 2px; background: var(--ink); }
+        .zs-why-c.key { background: #fff; }
+        .zs-float { border-radius: 4px; }
+        .zs-float::before { background: var(--ink); }
+        .zs-float-btn { background: var(--ink); border-radius: 3px; }
+        .zs-float-mail { border-radius: 3px; }
+        .zs-nav-cta { border-radius: 3px; }
+        .zs-founder { background: #fff; }
+        .zs-founder li::before { border-color: var(--ink); border-radius: 0; width: 6px; height: 6px; top: 1.2em; }
+        .zs-case figcaption span, .zs-steps span, .zs-why-no { color: var(--sub); }
+        .zs-card-h span, .zs-steps span, .zs-why-no, .zs-case figcaption span { font-family: Georgia, "Times New Roman", serif; font-style: italic; text-transform: none; letter-spacing: .02em; font-size: 13px; }
+        .zs-cta::after { background: radial-gradient(circle, rgba(90,120,170,.35), transparent 65%); }
+        .zs-lead { margin-top: 18px !important; }
+        @media (max-width: 640px) {
+          .zs-keys { grid-template-columns: 1fr 1fr 1fr; }
+          .zs-keys > div { padding-right: 10px; margin-right: 10px; }
+          .zs-keys dt { font-size: 16px; }
+          .zs-keys dd { font-size: 12px; white-space: normal; }
+          .zs-keys { width: auto; }
+          .zs-hero-en { font-size: 15px; }
         }
       `
 

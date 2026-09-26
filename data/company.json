@@ -5,17 +5,27 @@
   "creditCode": "91110106MAKB3553X4",
   "email": "hezuo@zhangyichen.life",
   "hero": {
-    "eyebrow": "DFT / AIMD / MLP",
+    "eyebrow": "北京智算分子科技有限公司 · 理论计算服务",
     "title": [
-      "第一性原理与分子动力学",
-      "计算服务"
+      "第一性原理与",
+      "分子动力学计算"
     ],
     "lead": "催化、电池、界面、分子体系的理论计算。建模、算、整理数据都由我们做，交付时附上全部输入输出文件，方法部分可以直接写进论文。",
     "tags": [
-      "专业",
-      "实惠",
-      "可开票"
-    ]
+      {
+        "t": "专业",
+        "d": "清华化工博士本人计算"
+      },
+      {
+        "t": "实惠",
+        "d": "评估免费，按量报价"
+      },
+      {
+        "t": "可开票",
+        "d": "普通发票、专用发票均可"
+      }
+    ],
+    "en": "First-principles and molecular dynamics simulations for catalysis, energy and materials research"
   },
   "stats": [
     {
