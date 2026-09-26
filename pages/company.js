@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
 import co from '@/data/company.json'
 
 // 化学式里的 unicode 下标转成 <sub>
@@ -261,7 +260,7 @@ export default function Company() {
           <a href="#services">计算服务</a>
           <a href="#why">特点</a>
           <a href="#cases">案例</a>
-          <a href="#about">创始人</a>
+          <a href="#about">关于</a>
           <a className="zs-nav-cta" href={'mailto:' + co.email}>联系我们</a>
         </nav>
       </header>
@@ -300,7 +299,7 @@ export default function Company() {
         <div className="zs-marquee">
           <div className="zs-track">
             {[0, 1].map(k => co.schools.map(x => (
-              <div key={k + x.name} className="zs-school" aria-hidden={k === 1}>
+              <div key={k + x.name} className={'zs-school' + (x.wide ? ' wide' : '')} aria-hidden={k === 1}>
                 <img src={'/company/logos/' + x.logo} alt={k ? '' : x.name} />
                 <span>{x.name}</span>
               </div>
@@ -340,24 +339,29 @@ export default function Company() {
 
       <section className="zs-sec" id="cases">
         <Title no="03" id="cases" />
-        <div className="zs-cases">
-          {co.cases.map((c, i) => (
-            <figure key={c.title} className={'zs-case reveal c' + i}>
-              <img src={c.img} alt={c.title} loading="lazy" />
-              <figcaption><span>{c.tag}</span><b>{c.title}</b></figcaption>
-            </figure>
-          ))}
+        <div className="zs-gallery reveal">
+          <div className="zs-gtrack">
+            {[0, 1].map(k => co.cases.map(c => (
+              <figure key={k + c.title} className="zs-case" aria-hidden={k === 1}>
+                <img src={c.img} alt={k ? '' : c.title} loading="lazy" />
+                <figcaption><span>{c.tag}</span><b>{chem(c.title)}</b></figcaption>
+              </figure>
+            )))}
+          </div>
         </div>
       </section>
 
       <section className="zs-sec" id="about">
         <Title no="04" id="about" />
         <div className="zs-founder reveal">
-          <div className="zs-photo"><img src={co.founder.photo} alt={co.founder.name} /></div>
+          <div className="zs-badge">
+            <Mark size={56} />
+            <b>清华大学</b>
+            <span>化学工程 · 博士</span>
+          </div>
           <div>
-            <h3>{co.founder.name}<span>{co.founder.role}</span></h3>
+            <h3>{co.founder.role}</h3>
             <ul>{co.founder.lines.map(l => <li key={l}>{l}</li>)}</ul>
-            <Link href="/cv"><a className="zs-link">查看完整简历 →</a></Link>
           </div>
         </div>
       </section>
@@ -388,7 +392,6 @@ export default function Company() {
           <div className="zs-foot-r">
             <span>统一社会信用代码 {co.creditCode}</span>
             <span>联系邮箱 {co.email}</span>
-            <span className="zs-partners">{co.partners}</span>
           </div>
         </div>
         <p className="zs-copy">© {new Date().getFullYear()} {co.name}</p>
@@ -464,7 +467,7 @@ const CSS = `
         .zs-hero-hint { position: absolute; bottom: 6%; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--mute); letter-spacing: .1em;
           padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.8); white-space: nowrap; }
 
-        .zs-stats { position: relative; max-width: 1240px; margin: 36px auto 0; display: grid; grid-template-columns: repeat(4, 1fr);
+        .zs-stats { position: relative; max-width: 1240px; margin: 36px auto 0; display: grid; grid-template-columns: repeat(3, 1fr);
           border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.85); backdrop-filter: blur(8px); }
         .zs-stat { padding: 24px 28px; border-left: 1px solid var(--line); }
         .zs-stat:first-child { border-left: 0; }
@@ -501,15 +504,14 @@ const CSS = `
         .zs-why-c h3 { font-size: 30px; margin: 10px 0 12px; }
         .zs-why-c p { font-size: 14.5px; color: var(--sub); }
 
-        .zs-cases { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
-        .zs-case { position: relative; border-radius: 22px; overflow: hidden; border: 1px solid var(--line);
-          background: radial-gradient(ellipse at 50% 55%, #f2f6fc 0%, #fff 72%); transition: opacity .8s, transform .8s; }
-        .zs-case img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform .8s; }
-        .zs-case:hover img { transform: scale(1.04); }
-        .zs-case.c0 { grid-column: span 7; aspect-ratio: 7 / 5; }
-        .zs-case.c1 { grid-column: span 5; aspect-ratio: 5 / 5; }
-        .zs-case.c2 { grid-column: span 5; aspect-ratio: 5 / 5; }
-        .zs-case.c3 { grid-column: span 7; aspect-ratio: 7 / 5; }
+        .zs-gallery { overflow: hidden; margin: 0 calc(-1 * clamp(16px, 5vw, 72px)); padding: 6px 0 10px;
+          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+        .zs-gtrack { display: flex; gap: 20px; width: max-content; animation: zsScroll 70s linear infinite; }
+        .zs-gallery:hover .zs-gtrack { animation-play-state: paused; }
+        .zs-case { position: relative; flex: none; width: 400px; aspect-ratio: 4 / 3.4; border-radius: 22px; overflow: hidden; border: 1px solid var(--line);
+          background: radial-gradient(ellipse at 50% 55%, #f2f6fc 0%, #fff 72%); }
+        .zs-case img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform .8s; padding: 12px 12px 56px; box-sizing: border-box; }
+        .zs-case:hover img { transform: scale(1.05); }
         .zs-case figcaption { position: absolute; left: 0; bottom: 0; right: 0; display: flex; flex-direction: column; gap: 3px; padding: 40px 22px 18px;
           background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.88) 45%, #fff 100%); }
         .zs-case figcaption span { font-size: 11.5px; color: var(--b1); }
@@ -522,6 +524,7 @@ const CSS = `
         .zs-marquee:hover .zs-track { animation-play-state: paused; }
         @keyframes zsScroll { to { transform: translateX(-50%); } }
         .zs-track .zs-school { flex: none; width: 150px; }
+        .zs-school.wide img { width: 110px; }
         .zs-schools { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
         .zs-school { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 22px 10px 16px; border: 1px solid var(--line); border-radius: 16px; background: #fff; transition: all .3s; }
         .zs-school img { width: 64px; height: 64px; object-fit: contain; filter: grayscale(1); opacity: .62; transition: all .35s; }
@@ -530,12 +533,15 @@ const CSS = `
         .zs-school:hover img { filter: none; opacity: 1; }
         .zs-note { font-size: 12.5px; color: var(--mute); margin-top: 16px; }
 
-        .zs-founder { display: grid; grid-template-columns: 260px 1fr; gap: 48px; align-items: center; padding: 36px; border: 1px solid var(--line); border-radius: 24px;
+        .zs-badge { aspect-ratio: 1 / 1; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+          background: radial-gradient(circle at 30% 20%, #1c3a7a 0%, #0b1b33 70%); color: #fff; position: relative; overflow: hidden; }
+        .zs-badge::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.14) 1px, transparent 1.2px); background-size: 16px 16px; }
+        .zs-badge > * { position: relative; }
+        .zs-badge b { font-size: 26px; letter-spacing: .12em; margin-top: 10px; }
+        .zs-badge span { font-size: 14px; color: #9fb4d8; letter-spacing: .1em; }
+        .zs-founder { display: grid; grid-template-columns: 240px 1fr; gap: 48px; align-items: center; padding: 36px; border: 1px solid var(--line); border-radius: 24px;
           background: linear-gradient(135deg, #f6f9ff 0%, #fff 55%); }
-        .zs-photo { position: relative; aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; }
-        .zs-photo::after { content: ""; position: absolute; inset: 0; border-radius: 18px; box-shadow: inset 0 0 0 1px rgba(11,27,51,.06); }
-        .zs-photo img { width: 100%; height: 100%; object-fit: cover; }
-        .zs-founder h3 { font-size: 30px; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+        .zs-founder h3 { font-size: 22px; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
         .zs-founder h3 span { font-size: 14px; color: var(--b1); font-weight: 500; }
         .zs-founder li { font-size: 15.5px; color: var(--sub); padding: 8px 0 8px 22px; border-bottom: 1px dashed var(--line); position: relative; }
         .zs-founder li::before { content: ""; position: absolute; left: 2px; top: 1.05em; width: 8px; height: 8px; border: 2px solid var(--b2); border-radius: 50%; }
@@ -580,7 +586,7 @@ const CSS = `
         .reveal { opacity: 0; transform: translateY(26px); }
         .reveal.in { opacity: 1; transform: none; transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
         .zs-card.reveal.in:hover { transform: translateY(-6px); }
-        @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } .zs-orb, .zs-track { animation: none; } }
+        @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } .zs-orb, .zs-track, .zs-gtrack { animation: none; } .zs-gallery { overflow-x: auto; } }
 
                 @media (max-width: 1600px) { .zs-float { width: 214px; padding: 14px; } .zs-float-s { display: none; } }
         @media (pointer: coarse) { .zs-hero-hint { display: none; } }
@@ -589,14 +595,11 @@ const CSS = `
           .zs-hero { padding-top: 96px; }
           .zs-hero-in { grid-template-columns: 1fr; }
           .zs-hero3d { max-width: 520px; margin: 0 auto; }
-          .zs-stats { grid-template-columns: repeat(2, 1fr); }
-          .zs-stat:nth-child(3) { border-left: 0; }
-          .zs-stat:nth-child(n+3) { border-top: 1px solid var(--line); }
           .zs-svc { grid-template-columns: repeat(2, 1fr); }
           .zs-why { grid-template-columns: repeat(2, 1fr); }
-          .zs-cases > .zs-case { grid-column: span 12 !important; aspect-ratio: 4 / 3 !important; }
+          .zs-case { width: 300px; }
           .zs-founder { grid-template-columns: 1fr; gap: 24px; padding: 22px; }
-          .zs-photo { max-width: 240px; }
+          .zs-badge { max-width: 220px; }
           .zs-steps { grid-template-columns: repeat(2, 1fr); }
           .zs-steps li:nth-child(3) { border-left: 0; }
           .zs-steps li:nth-child(n+3) { border-top: 1px solid var(--line); }
@@ -604,8 +607,9 @@ const CSS = `
         @media (max-width: 640px) {
           .zs-sec { padding-top: 76px; }
           .zs-svc, .zs-why { grid-template-columns: 1fr; }
-          .zs-stat { padding: 18px; }
-          .zs-stat b { font-size: 30px; }
+          .zs-stat { padding: 16px 12px; }
+          .zs-stat > span { font-size: 12.5px; }
+          .zs-stat b { font-size: 26px; }
           .zs-schools { grid-template-columns: repeat(3, 1fr); gap: 10px; }
           .zs-track .zs-school { width: 118px; }
           .zs-school img { width: 48px; height: 48px; }

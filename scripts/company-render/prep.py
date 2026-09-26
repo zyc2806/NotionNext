@@ -8,12 +8,12 @@ from ase.neighborlist import natural_cutoffs, NeighborList
 # 统一品牌调色:低饱和、和白底页面协调
 COL = {
  'H': '#F4F6FA', 'C': '#3A4250', 'N': '#3F7BFF', 'O': '#FF5A5F', 'S': '#F2C14E', 'P': '#F28C38',
- 'F': '#7FD8BE', 'Cl': '#5FD3A0', 'Br': '#B5563C', 'Se': '#E3A857', 'B': '#F7A8A8',
+ 'F': '#7FD8BE', 'Cl': '#5FD3A0', 'Br': '#E8A13A', 'Se': '#E3A857', 'B': '#F7A8A8',
  'Li': '#B18CFF', 'Na': '#9B7BFF', 'K': '#8A6BEE', 'Mg': '#6EDC8C', 'Ca': '#88D48A',
  'Fe': '#E07A3F', 'Co': '#3FB8D9', 'Ni': '#5DCC9A', 'Cu': '#D98A5A', 'Zn': '#8E9CB8', 'Mn': '#B06FD1',
  'Cr': '#6C8AE0', 'Mo': '#4FB3A9', 'W': '#5A7FA8', 'V': '#A5A9B4', 'Ti': '#9FB3C8', 'Zr': '#7FC7C0',
  'Pt': '#C9CFD8', 'Ru': '#2FA39A', 'Ir': '#3E8FD6', 'Au': '#F5C451', 'Ag': '#D0D6DF', 'Pd': '#8FB0D9',
- 'In': '#A67DB8', 'Bi': '#B85C8A', 'Te': '#C98A3C', 'Ta': '#5C9FD1', 'Y': '#7ED3E0', 'Al': '#AEB9C9',
+ 'In': '#A67DB8', 'Pb': '#4A5568', 'Bi': '#B85C8A', 'Te': '#C98A3C', 'Ta': '#5C9FD1', 'Y': '#7ED3E0', 'Al': '#AEB9C9',
  'Si': '#E6B86A', 'Ga': '#C69A9A', 'Cs': '#6E5BC4', 'Sn': '#8C9BAE', 'Ce': '#E8D37A', 'Eu': '#F07CA0',
 }
 RAD = {'H': 0.26}
@@ -29,6 +29,7 @@ def main():
     ap.add_argument('--sel', default=None, help='python 表达式,变量 x y z sym')
     ap.add_argument('--iso', default=None); ap.add_argument('--level', type=float, default=0.002)
     ap.add_argument('--scale', type=float, default=0.42)
+    ap.add_argument('--zshift', type=float, default=0.0)
     ap.add_argument('--mscale', type=float, default=0.6)
     a = ap.parse_args()
     at = read(a.src, index=a.index, format=a.fmt)
@@ -59,11 +60,11 @@ def main():
               'c': COL.get(s, '#9AA5B5')} for s, p in zip(syms, pos)]
     scene = {'atoms': atoms, 'bonds': bonds, 'cell': at.cell.array.tolist(), 'origin': [0, 0, 0]}
     if a.iso:
-        scene['iso'] = iso_meshes(a.iso, a.level, a.out)
+        scene['iso'] = iso_meshes(a.iso, a.level, a.out, a.zshift)
     json.dump(scene, open(a.out + '.json', 'w'))
     print(len(atoms), 'atoms', len(bonds), 'bonds', {s: syms.count(s) for s in set(syms)})
 
-def iso_meshes(path, level, out):
+def iso_meshes(path, level, out, zshift=0.0):
     from skimage.measure import marching_cubes
     if path.endswith('.cube'):
         from ase.io.cube import read_cube_data
@@ -78,6 +79,7 @@ def iso_meshes(path, level, out):
         if d.max() < level: continue
         v, f, _, _ = marching_cubes(d, level)
         frac = v / n
+        frac[:, 2] = (frac[:, 2] - zshift) % 1
         cart = frac @ cell
         fn = f'{out}_{name}.obj'
         with open(fn, 'w') as fo:

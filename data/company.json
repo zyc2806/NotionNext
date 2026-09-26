@@ -24,14 +24,9 @@
       "label": "已完成计算项目"
     },
     {
-      "value": 10,
+      "value": 15,
       "suffix": "+",
       "label": "服务高校与院所"
-    },
-    {
-      "value": 9,
-      "suffix": "",
-      "label": "合作发表论文"
     },
     {
       "value": 6,
@@ -172,30 +167,76 @@
   ],
   "cases": [
     {
-      "img": "/company/img/case1.webp",
-      "title": "单原子催化剂的差分电荷密度",
-      "tag": "VASP · 电子结构"
+      "img": "/company/img/gal_g1.webp",
+      "title": "Fe₅C₂ 团簇/石墨烯界面的差分电荷",
+      "tag": "CP2K · 电子结构"
     },
     {
-      "img": "/company/img/case3.webp",
-      "title": "高熵合金 (111) 表面模型",
-      "tag": "VASP · 催化"
+      "img": "/company/img/gal_g7.webp",
+      "title": "CoP 表面 *OOH 吸附的差分电荷",
+      "tag": "VASP · OER"
     },
     {
-      "img": "/company/img/case2.webp",
-      "title": "固液界面的从头算分子动力学",
-      "tag": "CP2K · AIMD"
+      "img": "/company/img/gal_g3.webp",
+      "title": "Ru 单原子掺杂 NiO 表面",
+      "tag": "DFT · 电催化"
     },
     {
-      "img": "/company/img/case4.webp",
-      "title": "万原子级机器学习势模拟",
-      "tag": "GPUMD · MLP"
+      "img": "/company/img/gal_g8.webp",
+      "title": "配体保护 Cu₂₈ 团簇的差分电荷",
+      "tag": "VASP · 团簇"
+    },
+    {
+      "img": "/company/img/gal_g4.webp",
+      "title": "CsPbBr₃ (001) 钙钛矿表面",
+      "tag": "DFT · 光催化"
+    },
+    {
+      "img": "/company/img/gal_g10.webp",
+      "title": "Fe–V 双原子位点吸附 *OH",
+      "tag": "DFT · ORR"
+    },
+    {
+      "img": "/company/img/gal_g6.webp",
+      "title": "NiFe 层状氢氧化物表面",
+      "tag": "DFT · OER"
+    },
+    {
+      "img": "/company/img/gal_g9.webp",
+      "title": "COF 晶体超胞骨架",
+      "tag": "MD · 多孔材料"
     }
   ],
   "schools": [
     {
       "name": "清华大学",
       "logo": "tsinghua.svg"
+    },
+    {
+      "name": "北京大学",
+      "logo": "pku.svg"
+    },
+    {
+      "name": "复旦大学",
+      "logo": "fudan.svg"
+    },
+    {
+      "name": "上海交通大学",
+      "logo": "sjtu.png"
+    },
+    {
+      "name": "苏黎世联邦理工学院",
+      "logo": "eth.svg",
+      "wide": true
+    },
+    {
+      "name": "洛桑联邦理工学院",
+      "logo": "epfl.svg",
+      "wide": true
+    },
+    {
+      "name": "香港科技大学",
+      "logo": "hkust.svg"
     },
     {
       "name": "中国科学技术大学",
@@ -218,6 +259,14 @@
       "logo": "sdu.svg"
     },
     {
+      "name": "暨南大学",
+      "logo": "jnu.svg"
+    },
+    {
+      "name": "中国科学院",
+      "logo": "rcees.png"
+    },
+    {
       "name": "郑州大学",
       "logo": "zzu.svg"
     },
@@ -234,20 +283,18 @@
       "logo": "ujn.png"
     },
     {
-      "name": "中国科学院",
-      "logo": "rcees.png"
+      "name": "青岛科技大学",
+      "logo": "qust.svg"
     }
   ],
   "founder": {
-    "name": "张逸晨",
     "role": "创始人 · 技术负责人",
-    "photo": "/me.jpg",
     "lines": [
-      "清华大学化学工程博士（在读），本科毕业于厦门大学化学工程与工艺专业",
-      "研究原子分散电催化剂的理论设计，以及用机器学习势加速催化模拟",
-      "自己也做实验：合成、电化学测试、XAS 表征都做过，和做实验的老师沟通不费劲",
-      "常用 VASP、CP2K、Gaussian、LAMMPS，以及 MACE、DPA、GPUMD 等机器学习势工具",
-      "获国家奖学金（两次）、清华大学滕藤奖学金、高英士奖学金"
+      "清华大学化学工程博士（在读）",
+      "研究方向：电催化理论计算、机器学习势",
+      "实验和计算都做过，和做实验的老师沟通顺畅",
+      "常用 VASP、CP2K、Gaussian、LAMMPS 及机器学习势工具",
+      "同时为华算科技、唯理计算（科学指南针）提供计算服务"
     ]
   },
   "steps": [
@@ -268,7 +315,6 @@
       "text": "交付完整数据包，之后有问题继续答疑"
     }
   ],
-  "partners": "同时为华算科技、唯理计算（科学指南针）提供计算服务",
   "sections": {
     "services": [
       "服务范围",
@@ -280,10 +326,10 @@
     ],
     "cases": [
       "计算案例",
-      "下面的图都由我们自己的计算结果渲染"
+      "部分项目的结构与电荷密度"
     ],
     "about": [
-      "创始人",
+      "关于我们",
       "谁在做你的计算"
     ],
     "steps": [
