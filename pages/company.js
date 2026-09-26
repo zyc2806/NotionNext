@@ -151,6 +151,8 @@ function Hero3D() {
         const dist = R / Math.sin(Math.min(fov, fov * cam.aspect) / 2) * (S.zoom || 0.82)
         cam.position.set(0, dist * 0.35, dist)
         cam.lookAt(0, 0, 0)
+        if (w > 900) cam.setViewOffset(w, h, -w * 0.12, 0, w, h)
+        else cam.clearViewOffset()
         cam.updateProjectionMatrix()
       }
       fit()
@@ -172,7 +174,6 @@ function Hero3D() {
     <div className={'zs-hero3d' + (ready ? ' on' : '')}>
       <img className="zs-hero-fallback" src="/company/img/hero.webp" alt="" />
       <div ref={ref} className="zs-hero-canvas" />
-      <span className="zs-hero-hint">可拖动 · Co–N₄ 位点与差分电荷密度</span>
     </div>
   )
 }
@@ -441,7 +442,9 @@ const CSS = `
         .zs-orb1 { width: 520px; height: 520px; right: -120px; top: 40px; background: radial-gradient(circle, rgba(20,200,216,.35), transparent 65%); animation: zsFloat 14s ease-in-out infinite; }
         .zs-orb2 { width: 420px; height: 420px; right: 280px; top: 260px; background: radial-gradient(circle, rgba(47,91,255,.22), transparent 65%); animation: zsFloat 18s ease-in-out infinite reverse; }
         @keyframes zsFloat { 50% { transform: translate(-30px, 24px); } }
-        .zs-hero-in { position: relative; max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1.02fr 1fr; gap: 24px; align-items: center; }
+        .zs-hero-in { position: relative; max-width: 1240px; margin: 0 auto; min-height: 560px; display: flex; align-items: center; }
+        .zs-hero-text { position: relative; z-index: 2; max-width: 600px; pointer-events: none; }
+        .zs-hero-text a, .zs-hero-text .zs-tag { pointer-events: auto; }
         .zs-eyebrow { font-size: 12.5px; color: var(--b1); margin-bottom: 20px; display: inline-flex; align-items: center; gap: 10px; }
         .zs-eyebrow::before { content: ""; width: 28px; height: 1.5px; background: var(--grad); }
         .zs-h1l { display: block; white-space: nowrap; }
@@ -458,16 +461,20 @@ const CSS = `
         .zs-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -12px rgba(47,91,255,.7); }
         .zs-btn.ghost { background: #fff; color: var(--ink) !important; border: 1px solid var(--line); box-shadow: none; }
 
-        .zs-hero3d { position: relative; aspect-ratio: 1 / 1; max-height: 560px; width: 100%; margin: 0 auto; }
+        .zs-hero3d { position: absolute; z-index: 1; top: 50%; right: -10vw; transform: translateY(-50%); width: min(92vw, 1250px); height: 820px; }
+        .zs-hero3d .zs-hero-canvas, .zs-hero3d .zs-hero-fallback {
+          mask-image: linear-gradient(90deg, transparent 8%, rgba(0,0,0,.18) 26%, rgba(0,0,0,.55) 40%, #000 52%);
+          -webkit-mask-image: linear-gradient(90deg, transparent 8%, rgba(0,0,0,.18) 26%, rgba(0,0,0,.55) 40%, #000 52%); }
+        .zs-lead { text-shadow: 0 0 10px #fff, 0 0 4px #fff; }
         .zs-hero-canvas, .zs-hero-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
         .zs-hero-fallback { object-fit: contain; transition: opacity .8s; }
         .zs-hero-canvas { opacity: 0; transition: opacity .8s; cursor: grab; }
         .zs-hero3d.on .zs-hero-canvas { opacity: 1; }
         .zs-hero3d.on .zs-hero-fallback { opacity: 0; }
-        .zs-hero-hint { position: absolute; bottom: 6%; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--mute); letter-spacing: .1em;
+        .zs-hero-hint-unused { position: absolute; bottom: 6%; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--mute); letter-spacing: .1em;
           padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.8); white-space: nowrap; }
 
-        .zs-stats { position: relative; max-width: 1240px; margin: 36px auto 0; display: grid; grid-template-columns: repeat(3, 1fr);
+        .zs-stats { position: relative; z-index: 2; max-width: 1240px; margin: 36px auto 0; display: grid; grid-template-columns: repeat(3, 1fr);
           border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.85); backdrop-filter: blur(8px); }
         .zs-stat { padding: 24px 28px; border-left: 1px solid var(--line); }
         .zs-stat:first-child { border-left: 0; }
@@ -589,12 +596,14 @@ const CSS = `
         @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } .zs-orb, .zs-track, .zs-gtrack { animation: none; } .zs-gallery { overflow-x: auto; } }
 
                 @media (max-width: 1600px) { .zs-float { width: 214px; padding: 14px; } .zs-float-s { display: none; } }
-        @media (pointer: coarse) { .zs-hero-hint { display: none; } }
+        @media (pointer: coarse) { .zs-hero-hint-unused { display: none; } }
         @media (max-width: 960px) {
           .zs-nav nav a:not(.zs-nav-cta) { display: none; }
           .zs-hero { padding-top: 96px; }
-          .zs-hero-in { grid-template-columns: 1fr; }
-          .zs-hero3d { max-width: 520px; margin: 0 auto; }
+          .zs-hero-in { display: block; min-height: 0; }
+          .zs-hero-text { pointer-events: auto; }
+          .zs-hero3d { position: relative; top: auto; right: auto; transform: none; width: 100%; max-width: 560px; height: auto; aspect-ratio: 1 / 1; margin: 0 auto; }
+          .zs-hero3d .zs-hero-canvas, .zs-hero3d .zs-hero-fallback { mask-image: none; -webkit-mask-image: none; }
           .zs-svc { grid-template-columns: repeat(2, 1fr); }
           .zs-why { grid-template-columns: repeat(2, 1fr); }
           .zs-case { width: 300px; }
