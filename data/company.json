@@ -1,0 +1,272 @@
+{
+  "name": "北京智算分子科技有限公司",
+  "short": "智算分子",
+  "en": "ZhiSuan Molecular Technology",
+  "creditCode": "91110106MAKB3553X4",
+  "email": "hezuo@zhangyichen.life",
+  "hero": {
+    "eyebrow": "DFT · AIMD · Machine-Learning Potentials",
+    "title": [
+      "第一性原理与分子动力学",
+      "计算服务"
+    ],
+    "lead": "面向高校与企业研发团队，提供从建模、计算到数据解读的完整理论计算服务。清华博士亲自计算，每一个结果都能追溯到原始输出文件。",
+    "tags": [
+      "专业",
+      "实惠",
+      "可开票"
+    ]
+  },
+  "stats": [
+    {
+      "value": 70,
+      "suffix": "+",
+      "label": "已完成计算项目"
+    },
+    {
+      "value": 10,
+      "suffix": "+",
+      "label": "服务高校与院所"
+    },
+    {
+      "value": 9,
+      "suffix": "",
+      "label": "合作发表论文"
+    },
+    {
+      "value": 6,
+      "suffix": "",
+      "label": "大类计算方向"
+    }
+  ],
+  "services": [
+    {
+      "key": "catalysis",
+      "title": "催化与电催化",
+      "en": "Catalysis",
+      "img": "/company/img/catalysis.webp",
+      "items": [
+        "吸附能与吸附构型",
+        "自由能台阶与过电位（OER / ORR / HER / CO₂RR / NRR）",
+        "过渡态与反应能垒（CI-NEB / Dimer）",
+        "d 带中心与活性描述符",
+        "单原子 / 双原子 / 高熵合金位点"
+      ],
+      "soft": [
+        "VASP",
+        "CP2K"
+      ]
+    },
+    {
+      "key": "electronic",
+      "title": "电子结构分析",
+      "en": "Electronic Structure",
+      "img": "/company/img/electronic.webp",
+      "items": [
+        "能带与态密度（DOS / PDOS）",
+        "差分电荷密度与 Bader 电荷",
+        "电子局域函数 ELF",
+        "COHP 成键分析",
+        "功函数与静电势"
+      ],
+      "soft": [
+        "VASP",
+        "LOBSTER",
+        "Bader"
+      ]
+    },
+    {
+      "key": "aimd",
+      "title": "从头算分子动力学",
+      "en": "Ab initio MD",
+      "img": "/company/img/aimd.webp",
+      "items": [
+        "固液界面与双电层结构",
+        "熔盐与高温液体",
+        "电解液溶剂化结构",
+        "径向分布函数 RDF 与配位数",
+        "扩散系数与离子输运"
+      ],
+      "soft": [
+        "CP2K",
+        "VASP"
+      ]
+    },
+    {
+      "key": "mlp",
+      "title": "机器学习势函数",
+      "en": "ML Potentials",
+      "img": "/company/img/mlp.webp",
+      "items": [
+        "通用大模型势函数直接应用",
+        "针对体系的微调与主动学习",
+        "万原子级、纳秒级长时模拟",
+        "增强采样与自由能面",
+        "相变与高温稳定性"
+      ],
+      "soft": [
+        "MACE",
+        "DeePMD",
+        "GPUMD",
+        "LAMMPS"
+      ]
+    },
+    {
+      "key": "battery",
+      "title": "电池与能源材料",
+      "en": "Energy Materials",
+      "img": "/company/img/battery.webp",
+      "items": [
+        "锂 / 钠离子迁移能垒",
+        "电极与电解质界面稳定性",
+        "空位与掺杂形成能",
+        "SEI 组分与分解路径",
+        "固态电解质离子电导"
+      ],
+      "soft": [
+        "VASP",
+        "CP2K",
+        "GPUMD"
+      ]
+    },
+    {
+      "key": "molecule",
+      "title": "分子与反应计算",
+      "en": "Molecular Modeling",
+      "img": "/company/img/molecule.webp",
+      "items": [
+        "分子结构优化与频率",
+        "前线轨道与静电势",
+        "弱相互作用（IGMH / NCI）",
+        "结合能与反应路径",
+        "吸收光谱与激发态"
+      ],
+      "soft": [
+        "Gaussian",
+        "ORCA",
+        "Multiwfn"
+      ]
+    }
+  ],
+  "advantages": [
+    {
+      "no": "01",
+      "title": "专业",
+      "text": "清华大学化工博士亲自完成计算与分析。参数经过收敛测试，结果与原始输出逐一核对，交付前经过独立检查。"
+    },
+    {
+      "no": "02",
+      "title": "实惠",
+      "text": "免费评估需求，透明报价，按实际计算量收费。常规体系交付周期短，不为用不上的精度多收钱。"
+    },
+    {
+      "no": "03",
+      "title": "可开票",
+      "text": "正规注册公司，可开增值税普通发票和专用发票，支持高校科研经费报销，可签技术服务合同。"
+    },
+    {
+      "no": "04",
+      "title": "交付完整",
+      "text": "交付计算方法说明、数据说明、结构文件、数据表和全部原始输出，方法部分可直接用于论文，结果可复现。"
+    }
+  ],
+  "cases": [
+    {
+      "img": "/company/img/case1.webp",
+      "title": "单原子催化剂的差分电荷密度",
+      "tag": "VASP · 电子结构"
+    },
+    {
+      "img": "/company/img/case3.webp",
+      "title": "高熵合金表面的吸附与反应",
+      "tag": "VASP · 催化"
+    },
+    {
+      "img": "/company/img/case2.webp",
+      "title": "固液界面的从头算分子动力学",
+      "tag": "CP2K · AIMD"
+    },
+    {
+      "img": "/company/img/case4.webp",
+      "title": "万原子级机器学习势模拟",
+      "tag": "GPUMD · MLP"
+    }
+  ],
+  "schools": [
+    {
+      "name": "清华大学",
+      "logo": "tsinghua.svg"
+    },
+    {
+      "name": "中国科学技术大学",
+      "logo": "ustc.svg"
+    },
+    {
+      "name": "浙江大学",
+      "logo": "zju.svg"
+    },
+    {
+      "name": "厦门大学",
+      "logo": "xmu.svg"
+    },
+    {
+      "name": "中南大学",
+      "logo": "csu.svg"
+    },
+    {
+      "name": "山东大学",
+      "logo": "sdu.svg"
+    },
+    {
+      "name": "郑州大学",
+      "logo": "zzu.svg"
+    },
+    {
+      "name": "中国石油大学（华东）",
+      "logo": "upc.svg"
+    },
+    {
+      "name": "昆明理工大学",
+      "logo": "kust.png"
+    },
+    {
+      "name": "济南大学",
+      "logo": "ujn.png"
+    },
+    {
+      "name": "中国科学院",
+      "logo": "rcees.png"
+    }
+  ],
+  "founder": {
+    "name": "张逸晨",
+    "role": "创始人 · 技术负责人",
+    "photo": "/me.jpg",
+    "lines": [
+      "清华大学化学工程博士（在读），厦门大学化学工程与工艺学士",
+      "研究方向为原子分散电催化剂的理论设计与机器学习势函数加速模拟",
+      "实验与理论双背景，熟悉合成、电化学与 XAS 表征，能读懂实验同行的问题",
+      "熟练使用 VASP、CP2K、Gaussian、LAMMPS 及 MACE / DPA / GPUMD 等机器学习势工具",
+      "获国家奖学金（两次）、清华大学滕藤奖学金、高英士奖学金等"
+    ]
+  },
+  "steps": [
+    {
+      "title": "沟通需求",
+      "text": "发来体系与想解决的问题，参考文献更好"
+    },
+    {
+      "title": "评估报价",
+      "text": "给出计算方案、周期与报价，确认后开始"
+    },
+    {
+      "title": "计算分析",
+      "text": "建模、参数测试、正式计算与数据整理"
+    },
+    {
+      "title": "交付答疑",
+      "text": "交付完整数据包，后续问题持续解答"
+    }
+  ],
+  "partners": "同时为华算科技、唯理计算（科学指南针）提供计算服务"
+}
