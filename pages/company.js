@@ -214,13 +214,13 @@ function Contact() {
   return (
     <aside className="zs-float" aria-label="联系方式">
       <div className="zs-float-head"><span className="zs-dot" />计算咨询</div>
-      <p className="zs-float-t">评估不收费，按计算量报价</p>
+      <p className="zs-float-t">免费评估，按计算量计价</p>
       <button className="zs-float-mail" onClick={copy} title="点击复制">
         <span>{co.email}</span>
         <em>{copied ? '已复制' : '复制'}</em>
       </button>
-      <a className="zs-float-btn" href={'mailto:' + co.email + '?subject=' + encodeURIComponent('计算需求咨询')}>发邮件咨询</a>
-      <p className="zs-float-s">点邮箱可复制</p>
+      <a className="zs-float-btn" href={'mailto:' + co.email + '?subject=' + encodeURIComponent('计算需求咨询')}>发送邮件</a>
+      <p className="zs-float-s">点击邮箱地址可复制</p>
     </aside>
   )
 }
@@ -259,9 +259,9 @@ export default function Company() {
         </a>
         <nav>
           <a href="#services">计算服务</a>
-          <a href="#why">特点</a>
-          <a href="#cases">案例</a>
-          <a href="#about">关于</a>
+          <a href="#why">服务特点</a>
+          <a href="#cases">计算案例</a>
+          <a href="#about">关于我们</a>
           <a className="zs-nav-cta" href={'mailto:' + co.email}>联系我们</a>
         </nav>
       </header>
@@ -277,8 +277,8 @@ export default function Company() {
               {co.hero.tags.map(k => <div key={k.t}><dt>{k.t}</dt><dd>{k.d}</dd></div>)}
             </dl>
             <div className="zs-hero-cta">
-              <a className="zs-btn" href="#services">能算什么</a>
-              <a className="zs-btn ghost" href={'mailto:' + co.email}>发邮件咨询</a>
+              <a className="zs-btn" href="#services">服务范围</a>
+              <a className="zs-btn ghost" href={'mailto:' + co.email}>联系咨询</a>
             </div>
           </div>
           <Hero3D />
