@@ -15,8 +15,8 @@
       "zh": "电催化 · 原子级分散位点 · 机器学习势函数"
     },
     "bio": {
-      "en": "I am a Ph.D. candidate in Chemical Engineering at Tsinghua University. My research focuses on non-precious metal catalysts for the oxygen reduction reaction (ORR), bridging experimental synthesis and characterization with density-functional theory to uncover structure–activity relationships at atomically dispersed active sites. I also develop machine-learning interatomic potentials and active-learning workflows to accelerate first-principles simulations of catalytic systems.",
-      "zh": "我是清华大学化学工程系博士研究生，研究方向为面向氧还原反应（ORR）的非贵金属催化剂；通过实验合成与表征结合密度泛函理论，揭示原子级分散活性位点的构效关系。同时发展机器学习势函数与主动学习流程，用于加速催化体系的第一性原理模拟。"
+      "en": "I am a Ph.D. candidate in Chemical Engineering at Tsinghua University. My research combines density-functional theory with experimental collaboration to study electrocatalytic reaction mechanisms, atomically dispersed active sites, CO₂ reduction and biomass-derived molecule oxidation. I am also developing machine-learning potential and active-learning workflows for catalytic simulations.",
+      "zh": "我是清华大学化学工程系博士研究生，通过密度泛函理论计算与实验合作研究电催化反应机理、原子级分散活性位点、CO₂还原及生物质衍生分子的氧化转化，同时开展面向催化模拟的机器学习势函数与主动学习流程研究。"
     },
     "email": "zhang-yc23@mails.tsinghua.edu.cn",
     "phone": "+86 180 5569 2939",
@@ -29,7 +29,8 @@
       "github": "https://github.com/zyc2806",
       "google_scholar": "https://scholar.google.com/citations?user=mqlWKSUAAAAJ",
       "orcid": "https://orcid.org/0000-0003-4089-745X",
-      "website": "https://zhangyichen.life"
+      "website": "https://zhangyichen.life",
+      "researchgate": "https://www.researchgate.net/profile/Zhang-Yichen-3"
     },
     "cv_pdf": "/cv.pdf"
   },
@@ -44,12 +45,12 @@
         "zh": "化学工程，博士研究生"
       },
       "date": {
-        "en": "Jun 2023 – Present",
-        "zh": "2023.06 – 至今"
+        "en": "Sep 2023 – Present",
+        "zh": "2023.09 – 至今"
       },
       "details": {
-        "en": "GPA 3.99 / 4.00 · Class rank 3 / 86 · Advisor: Assoc. Prof. Xuebing Zhao",
-        "zh": "GPA 3.99 / 4.00 · 专业排名 3 / 86 · 导师：赵雪冰 副教授"
+        "en": "GPA 3.99 / 4.00 · Advisor: Assoc. Prof. Xuebing Zhao",
+        "zh": "GPA 3.99 / 4.00 · 导师：赵雪冰 副教授"
       }
     },
     {
@@ -96,8 +97,8 @@
         "zh": "2025 – 至今"
       },
       "description": {
-        "en": "Built an active-learning geometry-optimization loop (MLP pre-relaxation → DFT → on-the-fly fine-tuning): on a 75-atom magnetic Fe–N–C ORR catalyst, fine-tuned MACE cut DFT ionic steps from 128 to 66–73, and revealed that DPA4-Air pre-relaxation quenches the Fe spin state. Developed dataset-audit and committee active-learning protocols for MACE / DPA4 fine-tuning; MLP-driven MD of Li-ion electrolytes and molten salts.",
-        "zh": "搭建主动学习几何优化闭环（势函数预弛豫 → DFT → 在线微调）：在 75 原子磁性 Fe–N–C ORR 催化剂上，微调后的 MACE 将 DFT 离子步从 128 步降至 66–73 步，并发现 DPA4-Air 预弛豫会淬灭 Fe 自旋态。建立数据集审计与委员会式主动学习流程，用于 MACE / DPA4 微调；以机器学习势驱动锂离子电解液与熔盐的分子动力学。"
+        "en": "Developing machine-learning potential workflows for catalytic systems, including MACE / DPA4 fine-tuning, dataset auditing and active learning, with DFT calculations used to evaluate structures and catalytic-site energetics.",
+        "zh": "开展催化体系机器学习势函数流程研究，包括MACE / DPA4微调、数据集审计与主动学习，并以DFT计算核验结构及催化位点能量。"
       }
     },
     {
@@ -116,6 +117,45 @@
     }
   ],
   "publications": [
+    {
+      "title": {
+        "en": "Atomic-level ruthenium-doped NiOₓ electrocatalyst achieves efficient conversion of 5-hydroxymethylfurfural to oxidized products under near-neutral conditions",
+        "zh": "原子级Ru掺杂NiOₓ电催化剂实现近中性条件下5-羟甲基糠醛向氧化产物的高效转化"
+      },
+      "authors": [
+        {
+          "name": "Liu, X."
+        },
+        {
+          "name": "Zhang, Y.",
+          "self": true
+        },
+        {
+          "name": "Xu, W."
+        },
+        {
+          "name": "Yan, B."
+        },
+        {
+          "name": "Zhao, X.",
+          "corresponding": true
+        }
+      ],
+      "venue": "Appl. Catal. B: Environ. Energy",
+      "doi": "10.1016/j.apcatb.2026.127259",
+      "year": 2026,
+      "volume_pages": "400 (2027), 127259",
+      "publication_date": "2026-07-20",
+      "accepted_date": "2026-07-18",
+      "highlight": {
+        "en": "Atomically dispersed Ru doping modifies NiOₓ to support HMF electrooxidation under near-neutral conditions. DFT identifies complementary roles of Ru in water dissociation and Ni sites in HMF adsorption.",
+        "zh": "原子级Ru掺杂调控NiOₓ，促进近中性条件下HMF电氧化；DFT揭示Ru促进水解离、Ni位点促进HMF吸附的协同作用。"
+      },
+      "contribution": {
+        "en": "Second author; investigation, software and validation, as stated in the published CRediT declaration.",
+        "zh": "第二作者；正式CRediT声明列明贡献为研究实施、软件和验证。"
+      }
+    },
     {
       "title": {
         "en": "Motif editing for reaction pathway switching from formate to CO in single-atom indium catalysts via adjacent carbon site manipulation",
@@ -165,8 +205,13 @@
       "year": 2026,
       "volume_pages": "36, e76951",
       "highlight": {
-        "en": "Incorporating O into the In–N₄ Lewis interface edits the motif to In–N₂O₂, switching the CO₂RR product from formate to CO with >90% CO selectivity across −0.51 to −1.10 V vs. RHE. In situ spectroscopy and DFT reveal that In–N₂O₂ enriches the electron density of adjacent carbon sites, facilitating *COOH adsorption and CO formation.",
-        "zh": "将 O 引入 In–N₄ 的 Lewis 界面,把配位基元编辑为 In–N₂O₂,使 CO₂RR 产物由甲酸盐切换为 CO,在 −0.51 至 −1.10 V vs. RHE 电位窗口内 CO 选择性 >90%。原位光谱与 DFT 计算表明,In–N₂O₂ 提升了近邻碳位的电子密度,促进 *COOH 吸附与 CO 生成。"
+        "en": "Editing the indium coordination motif from In–N₄ to In–N₂O₂ switches the CO₂ reduction pathway from formate to CO. In situ spectroscopy and DFT identify the role of adjacent carbon sites in *COOH adsorption and CO formation.",
+        "zh": "将铟单原子配位基元由In–N₄调为In–N₂O₂，实现CO₂还原由甲酸盐向CO的路径切换；原位谱学与DFT揭示相邻碳位点对*COOH吸附及CO生成的作用。"
+      },
+      "publication_date": "2026-07-10",
+      "contribution": {
+        "en": "Co-first author, second in author order; contributed to methodology, investigation, data curation, formal analysis, visualization, validation and manuscript drafting.",
+        "zh": "共同第一作者，排序第二；参与方法设计、研究实施、数据整理、分析、可视化、验证及论文初稿撰写。"
       }
     },
     {
@@ -232,13 +277,15 @@
           "name": "Zhan, G."
         },
         {
-          "name": "Li, Q."
-        },
-        {
-          "name": "Huang, J."
-        },
-        {
           "name": "Fu, G.",
+          "corresponding": true
+        },
+        {
+          "name": "Li, Q.",
+          "corresponding": true
+        },
+        {
+          "name": "Huang, J.",
           "corresponding": true
         }
       ],
@@ -249,6 +296,11 @@
       "highlight": {
         "en": "Engineered Cu₂O nanoframes via ligand-protected facet etching achieve 0.18 mmol g_cat⁻¹ h⁻¹ PO formation rate with 83.8% selectivity at 175 °C. DFT and characterization confirm Cu₂O {110} facets promote active oxygen species generation and selective epoxidation.",
         "zh": "通过配体保护的晶面刻蚀设计 Cu₂O 纳米框架，在 175 °C 下取得 0.18 mmol g_cat⁻¹ h⁻¹ 的 PO 生成速率与 83.8% 的选择性。DFT 计算与表征证实 Cu₂O {110} 晶面有利于活性氧物种的生成与选择性环氧化。"
+      },
+      "publication_date": "2025-08-21",
+      "contribution": {
+        "en": "Co-first author, second in author order; performed DFT simulations with Gang Fu and participated in manuscript preparation and checking.",
+        "zh": "共同第一作者，排序第二；与Gang Fu共同开展DFT模拟，并参与论文准备与核查。"
       }
     },
     {
@@ -343,14 +395,14 @@
         }
       ],
       "venue": "Nat. Catal.",
-      "year": 2025,
+      "year": null,
       "status": {
-        "en": "under revision",
-        "zh": "审稿中"
+        "en": "under revision; not published",
+        "zh": "返修中，尚未发表"
       },
       "highlight": {
-        "en": "A novel Cu₁–N₂ single-atom catalyst for direct propylene epoxidation, with record PO formation rates. Characterization and DFT show exclusive Cu–N coordination enhances electrophilic oxygen species formation, enabling selective C=C bond activation.",
-        "zh": "提出新型 Cu₁–N₂ 单原子催化剂用于丙烯直接环氧化，PO 生成速率刷新纪录。表征与 DFT 表明 Cu–N 单一配位有利于亲电氧物种生成，从而实现 C=C 键的选择性活化。"
+        "en": "Manuscript on low-coordinate Cu₁–N₂ single-atom sites for propylene epoxidation with molecular oxygen.",
+        "zh": "研究低配位Cu₁–N₂单原子位点促进分子氧丙烯环氧化的稿件。"
       }
     },
     {

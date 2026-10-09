@@ -1,684 +1,269 @@
-import { useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
 import co from '@/data/company.json'
+import Hero3D from '@/components/CompanyHero3D'
 
-// 化学式里的 unicode 下标转成 <sub>
-const SUB = { '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4', '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9' }
-const chem = (s) => {
-  const out = []
-  let buf = ''
-  let sub = ''
-  for (const ch of s) {
-    if (SUB[ch]) {
-      if (buf) { out.push(buf); buf = '' }
-      sub += SUB[ch]
-    } else {
-      if (sub) { out.push(<sub key={out.length}>{sub}</sub>); sub = '' }
-      buf += ch
+const chem = text => text.split(/([₀-₉]+)/u).map((part, index) => index % 2
+  ? <sub key={index}>{part.replace(/[₀-₉]/gu, ch => String(ch.charCodeAt(0) - 0x2080))}</sub>
+  : part)
+
+const Title = ({ number, id }) => (
+  <div className="zs-title"><p className="zs-kicker">{number} / {co.sections[id][0]}</p><h2>{co.sections[id][1]}</h2></div>
+)
+
+const METHODS = [
+  { key: '研究问题', label: '01 / 课题与模型', title: '根据研究问题，明确模型假设。', text: '沟通研究体系、目标性质与实验线索，明确对照体系、模型假设和边界条件，让计算方案对应具体的研究问题。', img: '/company/img/catalysis.webp', caption: '原子尺度结构模型示意' },
+  { key: '计算方法', label: '02 / 计算与验证', title: '依据模型与采样条件，选择计算方法。', text: 'DFT 结果需结合泛函、结构模型与参数收敛评估；AIMD 分析受模拟时间与采样条件限制；机器学习势需针对目标体系验证能量、力及相关性质。', img: '/company/img/electronic.webp', caption: '电子结构与活性位点的模型示意' },
+  { key: '数据交付', label: '03 / 方法与数据', title: '记录计算设置，交付约定数据。', text: '按双方约定交付结构、输入输出文件、分析数据与方法说明，记录计算条件与处理步骤。结合实验和文献讨论模型支持的解释、方法局限及待验证问题。', img: '/company/img/mlp.webp', caption: '多原子体系的模型示意' }
+]
+
+function installMethodObserver(root, setActive) {
+  if (!root || !window.IntersectionObserver) return () => {}
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) setActive(Number(entry.target.dataset.methodIndex))
+    })
+  }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 })
+  root.querySelectorAll('[data-method-index]').forEach(element => observer.observe(element))
+  return () => observer.disconnect()
+}
+
+function installScrollReveal(root) {
+  const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+  if (!root || media.matches || !window.IntersectionObserver) return () => {}
+  const items = root.querySelectorAll('.zs-title, .zs-service, .zs-principles article, .zs-cases figure, .zs-about, .zs-collaboration, .zs-steps li, .zs-contact')
+  const show = element => element.classList.add('zs-shown')
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        show(entry.target)
+        observer.unobserve(entry.target)
+      }
+    })
+  }, { threshold: 0.08, rootMargin: '0px 0px -28px 0px' })
+  items.forEach((element, index) => {
+    if (element.getBoundingClientRect().top < window.innerHeight - 28) return
+    element.classList.add('zs-reveal')
+    element.style.setProperty('--reveal-delay', `${index % 3 * 55}ms`)
+    observer.observe(element)
+  })
+  const preferenceChanged = () => {
+    if (media.matches) {
+      items.forEach(show)
+      observer.disconnect()
     }
   }
-  if (sub) out.push(<sub key={out.length}>{sub}</sub>)
-  if (buf) out.push(buf)
-  return out
-}
-
-const Mark = ({ size = 34 }) => (
-  <svg viewBox="0 0 64 64" width={size} height={size} aria-hidden="true">
-    <defs>
-      <linearGradient id="zsg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stopColor="#0B1B33" />
-        <stop offset="1" stopColor="#2A4F8A" />
-      </linearGradient>
-    </defs>
-    <path d="M32 6 L54.5 19 L54.5 45 L32 58 L9.5 45 L9.5 19 Z" fill="none" stroke="url(#zsg)" strokeWidth="4" strokeLinejoin="round" />
-    <g stroke="url(#zsg)" strokeWidth="3.2" strokeLinecap="round">
-      <line x1="32" y1="32" x2="32" y2="10" />
-      <line x1="32" y1="32" x2="51" y2="43" />
-      <line x1="32" y1="32" x2="13" y2="43" />
-    </g>
-    <circle cx="32" cy="32" r="7.5" fill="url(#zsg)" />
-    <circle cx="32" cy="32" r="3" fill="#fff" />
-    <circle cx="54.5" cy="19" r="3.6" fill="#1F3A68" />
-    <circle cx="9.5" cy="19" r="3.6" fill="#2A4F8A" />
-    <circle cx="32" cy="58" r="3.6" fill="#1F3A68" />
-  </svg>
-)
-
-// 首屏可拖动的 3D 结构(three.js 从 public 自托管加载)
-function Hero3D() {
-  const ref = useRef(null)
-  const [ready, setReady] = useState(false)
-  useEffect(() => {
-    let stop = false
-    let cleanup = () => {}
-    const base = '/company/three/'
-    Promise.all([
-      import(/* webpackIgnore: true */ base + 'three.module.min.js'),
-      import(/* webpackIgnore: true */ base + 'OrbitControls.js'),
-      import(/* webpackIgnore: true */ base + 'RoomEnvironment.js'),
-      fetch('/company/hero.json').then(r => r.json())
-    ]).then(([THREE, { OrbitControls }, { RoomEnvironment }, S]) => {
-      if (stop || !ref.current) return
-      const el = ref.current
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-      renderer.toneMapping = THREE.ACESFilmicToneMapping
-      renderer.toneMappingExposure = 1.05
-      el.appendChild(renderer.domElement)
-      const scene = new THREE.Scene()
-      const pmrem = new THREE.PMREMGenerator(renderer)
-      scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
-      const cam = new THREE.PerspectiveCamera(32, 1, 0.1, 1000)
-      const group = new THREE.Group()
-      scene.add(group)
-
-      const ctr = new THREE.Vector3()
-      S.atoms.forEach(a => ctr.add(new THREE.Vector3(...a.p)))
-      ctr.divideScalar(S.atoms.length)
-      const matCache = {}
-      const mat = (c, extra = {}) => {
-        const k = c + JSON.stringify(extra)
-        if (!matCache[k]) {
-          matCache[k] = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(c), roughness: 0.3, metalness: 0.05, clearcoat: 0.8, clearcoatRoughness: 0.12, ...extra })
-        }
-        return matCache[k]
-      }
-      // 原子: 按颜色+半径分组用 InstancedMesh
-      const groups = {}
-      S.atoms.forEach(a => { const k = a.c + '|' + a.r; (groups[k] = groups[k] || []).push(a) })
-      const sph = new THREE.SphereGeometry(1, 40, 24)
-      const m4 = new THREE.Matrix4()
-      Object.entries(groups).forEach(([k, arr]) => {
-        const [c, r] = k.split('|')
-        const im = new THREE.InstancedMesh(sph, mat(c), arr.length)
-        arr.forEach((a, i) => {
-          m4.makeScale(+r, +r, +r).setPosition(new THREE.Vector3(...a.p).sub(ctr))
-          im.setMatrixAt(i, m4)
-        })
-        group.add(im)
-      })
-      // 键
-      const cyl = new THREE.CylinderGeometry(0.12, 0.12, 1, 16, 1)
-      const bgroups = {}
-      const up = new THREE.Vector3(0, 1, 0)
-      S.bonds.forEach(([i, j]) => {
-        const a = new THREE.Vector3(...S.atoms[i].p).sub(ctr)
-        const b = new THREE.Vector3(...S.atoms[j].p).sub(ctr)
-        const mid = a.clone().add(b).multiplyScalar(0.5);
-        [[a, mid, S.atoms[i].c], [mid, b, S.atoms[j].c]].forEach(([s, e, c]) => {
-          (bgroups[c] = bgroups[c] || []).push([s, e])
-        })
-      })
-      Object.entries(bgroups).forEach(([c, arr]) => {
-        const im = new THREE.InstancedMesh(cyl, mat(c), arr.length)
-        arr.forEach(([s, e], i) => {
-          const d = e.clone().sub(s)
-          const q = new THREE.Quaternion().setFromUnitVectors(up, d.clone().normalize())
-          m4.compose(s.clone().add(e).multiplyScalar(0.5), q, new THREE.Vector3(1, d.length(), 1))
-          im.setMatrixAt(i, m4)
-        })
-        group.add(im)
-      })
-      // 等值面(可选)
-      ;(S.isoMesh || []).forEach(m => {
-        const g = new THREE.BufferGeometry()
-        g.setAttribute('position', new THREE.Float32BufferAttribute(m.v.map((x, i) => x - ctr.getComponent(i % 3)), 3))
-        g.setIndex(m.f)
-        g.computeVertexNormals()
-        group.add(new THREE.Mesh(g, mat(m.c, { transparent: true, opacity: 0.72, depthWrite: false, side: THREE.DoubleSide, roughness: 0.15 })))
-      })
-      group.rotation.x = S.tilt || -1.05
-
-      let R = 0
-      S.atoms.forEach(a => { R = Math.max(R, new THREE.Vector3(...a.p).sub(ctr).length()) })
-      const controls = new OrbitControls(cam, renderer.domElement)
-      controls.enableZoom = false
-      controls.enablePan = false
-      controls.enableDamping = true
-      controls.autoRotate = true
-      controls.autoRotateSpeed = 0.7
-      // 手机上不接管触摸,免得页面划不动
-      if (window.matchMedia('(pointer: coarse)').matches) {
-        controls.enableRotate = false
-        renderer.domElement.style.touchAction = 'pan-y'
-      }
-      const fit = () => {
-        const w = el.clientWidth
-        const h = el.clientHeight
-        renderer.setSize(w, h)
-        cam.aspect = w / h
-        const fov = cam.fov * Math.PI / 180
-        const dist = R / Math.sin(Math.min(fov, fov * cam.aspect) / 2) * (S.zoom || 0.82)
-        cam.position.set(0, dist * 0.35, dist)
-        cam.lookAt(0, 0, 0)
-        if (w > 900) cam.setViewOffset(w, h, -w * 0.12, 0, w, h)
-        else cam.clearViewOffset()
-        cam.updateProjectionMatrix()
-      }
-      fit()
-      window.addEventListener('resize', fit)
-      let raf
-      const loop = () => { controls.update(); renderer.render(scene, cam); raf = requestAnimationFrame(loop) }
-      loop()
-      setReady(true)
-      cleanup = () => {
-        cancelAnimationFrame(raf)
-        window.removeEventListener('resize', fit)
-        renderer.dispose()
-        el.innerHTML = ''
-      }
-    }).catch(() => {})
-    return () => { stop = true; cleanup() }
-  }, [])
-  return (
-    <div className={'zs-hero3d' + (ready ? ' on' : '')}>
-      <img className="zs-hero-fallback" src="/company/img/hero.webp" alt="" />
-      <div ref={ref} className="zs-hero-canvas" />
-    </div>
-  )
-}
-
-function Counter({ value, suffix }) {
-  const ref = useRef(null)
-  const [n, setN] = useState(value)
-  useEffect(() => {
-    const el = ref.current
-    if (!el || !('IntersectionObserver' in window)) return
-    setN(0)
-    const io = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting) return
-      io.disconnect()
-      const t0 = performance.now()
-      const tick = (t) => {
-        const k = Math.min(1, (t - t0) / 1400)
-        setN(Math.round(value * (1 - Math.pow(1 - k, 3))))
-        if (k < 1) requestAnimationFrame(tick)
-      }
-      requestAnimationFrame(tick)
-    }, { threshold: 0.4 })
-    io.observe(el)
-    return () => io.disconnect()
-  }, [value])
-  return <span ref={ref}>{n}{suffix}</span>
-}
-
-function Contact() {
-  const [copied, setCopied] = useState(false)
-  const copy = () => {
-    try {
-      navigator.clipboard.writeText(co.email)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1800)
-    } catch (e) {}
+  media.addEventListener('change', preferenceChanged)
+  return () => {
+    observer.disconnect()
+    media.removeEventListener('change', preferenceChanged)
   }
-  return (
-    <aside className="zs-float" aria-label="联系方式">
-      <div className="zs-float-head"><span className="zs-dot" />计算咨询</div>
-      <p className="zs-float-t">免费评估，按计算量计价</p>
-      <button className="zs-float-mail" onClick={copy} title="点击复制">
-        <span>{co.email}</span>
-        <em>{copied ? '已复制' : '复制'}</em>
-      </button>
-      <a className="zs-float-btn" href={'mailto:' + co.email + '?subject=' + encodeURIComponent('计算需求咨询')}>发送邮件</a>
-      <p className="zs-float-s">点击邮箱地址可复制</p>
-    </aside>
-  )
 }
-
-const Title = ({ no, id }) => (
-  <div className="zs-title reveal">
-    <span className="zs-no">{no} · {co.sections[id][0]}</span>
-    <h2>{co.sections[id][1]}</h2>
-  </div>
-)
 
 export default function Company() {
-  useEffect(() => {
-    const els = document.querySelectorAll('.zs-root .reveal')
-    if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return }
-    const io = new IntersectionObserver((es) => es.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) }
-    }), { threshold: 0.12, rootMargin: '0px 0px -40px 0px' })
-    els.forEach(e => io.observe(e))
-    return () => io.disconnect()
-  }, [])
-
+  const rootRef = useRef(null)
+  const [activeMethod, setActiveMethod] = useState(0)
+  useEffect(() => installScrollReveal(rootRef.current), [])
+  useEffect(() => installMethodObserver(rootRef.current, setActiveMethod), [])
+  const selectMethod = index => {
+    setActiveMethod(index)
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    rootRef.current.querySelector(`[data-method-index="${index}"]`).scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' })
+  }
   return (
-    <div className="zs-root">
+    <div className="zs-root" ref={rootRef}>
       <Head>
-        <title>{co.short} · 第一性原理与分子动力学计算服务</title>
-        <meta name="description" content="北京智算分子科技有限公司提供 DFT、从头算分子动力学、机器学习势函数计算服务，覆盖催化、电子结构、电池材料与分子计算。清华博士亲自计算，可开发票。" />
+        <title>{co.short} · 面向催化与材料研究的原子尺度模拟</title>
+        <meta name="description" content="围绕催化与材料研究问题开展 DFT、AIMD 与机器学习势计算，讨论模型、参数收敛和数据验证，交付可复核的结构、数据与方法说明。" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/company/mark.svg" />
       </Head>
-
       <header className="zs-nav">
-        <a className="zs-brand" href="#top">
-          <Mark />
-          <span className="zs-brand-t"><b>{co.short}</b><i>{co.en}</i></span>
-        </a>
-        <nav>
-          <a href="#services">计算服务</a>
-          <a href="#why">服务特点</a>
-          <a href="#cases">计算案例</a>
-          <a href="#about">关于我们</a>
-          <a className="zs-nav-cta" href={'mailto:' + co.email}>联系我们</a>
-        </nav>
+        <a className="zs-brand" href="#top" aria-label={co.name}><img src="/company/mark.svg" alt="" width="36" height="36" /><span><b>{co.short}</b><small>{co.en}</small></span></a>
+        <nav aria-label="公司页导航"><a href="#services">研究方法</a><a href="#cases">研究图版</a><a href="#about">研究背景</a><a href="#contact" className="zs-nav-contact">合作咨询 ↗</a></nav>
       </header>
-
-      <section className="zs-hero" id="top">
-        <div className="zs-hero-in">
+      <main>
+        <section className="zs-hero zs-container" id="top" aria-labelledby="company-heading">
           <div className="zs-hero-text">
-            <p className="zs-eyebrow">{co.hero.eyebrow}</p>
-            <h1>{co.hero.title.map(t => <span key={t} className="zs-h1l">{t}</span>)}</h1>
-            <p className="zs-hero-en">{co.hero.en}</p>
-            <p className="zs-lead">{co.hero.lead}</p>
-            <dl className="zs-keys">
-              {co.hero.tags.map(k => <div key={k.t}><dt>{k.t}</dt><dd>{k.d}</dd></div>)}
-            </dl>
-            <div className="zs-hero-cta">
-              <a className="zs-btn" href="#services">服务范围</a>
-              <a className="zs-btn ghost" href={'mailto:' + co.email}>联系咨询</a>
+            <p className="zs-kicker">{co.hero.eyebrow}</p>
+            <h1 id="company-heading">{co.hero.title.map(line => <span key={line}>{line}</span>)}</h1>
+            <p className="zs-hero-en">{co.hero.en}</p><p className="zs-lead">{co.hero.lead}</p>
+            <div className="zs-actions"><a className="zs-button" href="#services">了解研究方法</a><a className="zs-text-link" href="#contact">讨论研究问题 ↗</a></div>
+          </div>
+          <figure className="zs-hero-figure"><div className="zs-figure-label"><span>ATOMISTIC MODEL</span><span>01</span></div><Hero3D /><figcaption><span>结构 · 电子 · 反应</span><span>原子尺度模型示意</span></figcaption></figure>
+          <dl className="zs-methods">{co.hero.tags.map(tag => <div key={tag.t}><dt>{tag.t}</dt><dd>{tag.d}</dd></div>)}</dl>
+        </section>
+        <section className="zs-section zs-container" id="services">
+          <Title number="01" id="services" />
+          <div className="zs-story">
+            <div className="zs-story-media">
+              <div className="zs-story-controls" aria-label="研究方法导航">{METHODS.map((method, index) => <button key={method.key} aria-pressed={activeMethod === index} onClick={() => selectMethod(index)}>{method.key}</button>)}</div>
+              <div className="zs-story-image">{METHODS.map((method, index) => <img key={method.key} className={'zs-story-layer' + (activeMethod === index ? ' is-active' : '')} src={method.img} alt={activeMethod === index ? method.caption : ''} aria-hidden={activeMethod !== index} width="600" height="600" />)}</div>
+              <p className="zs-story-caption"><span>{METHODS[activeMethod].caption}</span><span>0{activeMethod + 1} / 03</span></p>
             </div>
+            <div className="zs-story-chapters">{METHODS.map((method, index) => <article key={method.key} data-method-index={index}><p className="zs-kicker">{method.label}</p><img className="zs-story-mobile-image" src={method.img} alt={method.caption} width="240" height="240" loading="lazy" /><h3>{method.title}</h3><p>{method.text}</p></article>)}</div>
           </div>
-          <Hero3D />
-        </div>
-        <div className="zs-stats">
-          {co.stats.map(s => (
-            <div key={s.label} className="zs-stat">
-              <b><Counter value={s.value} suffix={s.suffix} /></b>
-              <span>{s.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="zs-strip" id="schools">
-        <p className="zs-strip-t">{co.schoolsTitle}</p>
-        <div className="zs-marquee">
-          <div className="zs-track">
-            {[0, 1].map(k => co.schools.map(x => (
-              <div key={k + x.name} className={'zs-school' + (x.wide ? ' wide' : '')} aria-hidden={k === 1}>
-                <img src={'/company/logos/' + x.logo} alt={k ? '' : x.name} />
-                <span>{x.name}</span>
-              </div>
-            )))}
-          </div>
-        </div>
-      </section>
-
-      <section className="zs-sec" id="services">
-        <Title no="01" id="services" />
-        <div className="zs-svc">
-          {co.services.map((s, i) => (
-            <article key={s.key} className="zs-card reveal" style={{ transitionDelay: (i % 3) * 80 + 'ms' }}>
-              <div className="zs-card-img"><img src={s.img} alt={s.title} loading="lazy" /></div>
-              <div className="zs-card-body">
-                <div className="zs-card-h"><h3>{s.title}</h3><span>{s.en}</span></div>
-                <ul>{s.items.map(it => <li key={it}>{chem(it)}</li>)}</ul>
-                <div className="zs-soft">{s.soft.map(x => <span key={x}>{x}</span>)}</div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="zs-sec zs-why-wrap" id="why">
-        <Title no="02" id="why" />
-        <div className="zs-why">
-          {co.advantages.map((a, i) => (
-            <div key={a.no} className={'zs-why-c reveal' + (i < 3 ? ' key' : '')} style={{ transitionDelay: i * 80 + 'ms' }}>
-              <span className="zs-why-no">{a.no}</span>
-              <h3>{a.title}</h3>
-              <p>{a.text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="zs-sec" id="cases">
-        <Title no="03" id="cases" />
-        <div className="zs-gallery reveal">
-          <div className="zs-gtrack">
-            {[0, 1].map(k => co.cases.map(c => (
-              <figure key={k + c.title} className="zs-case" aria-hidden={k === 1}>
-                <img src={c.img} alt={k ? '' : c.title} loading="lazy" />
-                <figcaption><span>{c.tag}</span><b>{chem(c.title)}</b></figcaption>
-              </figure>
-            )))}
-          </div>
-        </div>
-      </section>
-
-      <section className="zs-sec" id="about">
-        <Title no="04" id="about" />
-        <div className="zs-founder reveal">
-          <div className="zs-badge">
-            <Mark size={56} />
-            <b>清华大学</b>
-            <span>化学工程 · 博士</span>
-          </div>
-          <div>
-            <h3>{co.founder.role}</h3>
-            <ul>{co.founder.lines.map(l => <li key={l}>{l}</li>)}</ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="zs-sec">
-        <Title no="05" id="steps" />
-        <ol className="zs-steps">
-          {co.steps.map((s, i) => (
-            <li key={s.title} className="reveal" style={{ transitionDelay: i * 90 + 'ms' }}>
-              <span>STEP {i + 1}</span>
-              <h3>{s.title}</h3>
-              <p>{s.text}</p>
-            </li>
-          ))}
-        </ol>
-        <div className="zs-cta reveal">
-          <div>
-            <h3>{co.cta.title}</h3>
-            <p>{co.cta.text}</p>
-          </div>
-          <a className="zs-btn" href={'mailto:' + co.email + '?subject=' + encodeURIComponent('计算需求咨询')}>{co.email}</a>
-        </div>
-      </section>
-
-      <footer className="zs-foot">
-        <div className="zs-foot-in">
-          <div className="zs-brand"><Mark size={28} /><span className="zs-brand-t"><b>{co.name}</b><i>{co.en} Co., Ltd.</i></span></div>
-          <div className="zs-foot-r">
-            <span>统一社会信用代码 {co.creditCode}</span>
-            <span>联系邮箱 {co.email}</span>
-          </div>
-        </div>
-        <p className="zs-copy">© {new Date().getFullYear()} {co.name}</p>
-      </footer>
-
-      <Contact />
-
+          <div className="zs-service-heading"><h3>计算方向与分析内容</h3><p>具体方法、模型与分析范围根据研究问题协商确定。</p></div>
+          <div className="zs-services">{co.services.map(service => <article className="zs-service" key={service.key}>
+            <div className="zs-service-top"><div><p className="zs-english">{service.en}</p><h3>{service.title}</h3></div><img src={service.img} alt="" loading="lazy" width="100" height="100" /></div>
+            <ul>{service.items.map(item => <li key={item}>{chem(item)}</li>)}</ul>
+            <div className="zs-software" aria-label="方法工具">{service.soft.map(tool => <span key={tool}>{tool}</span>)}</div>
+          </article>)}</div>
+          <p className="zs-method-note">{co.methodNote}</p>
+        </section>
+        <section className="zs-section zs-container" id="why"><Title number="02" id="why" /><div className="zs-principles">{co.advantages.map(item => <article key={item.no}><span className="zs-number">{item.no}</span><h3>{item.title}</h3><p>{item.text}</p></article>)}</div></section>
+        <section className="zs-section zs-container" id="cases"><Title number="03" id="cases" /><p className="zs-intro">{co.caseNote}</p><div className="zs-cases">{co.cases.map((item, index) => <figure key={item.img}>
+          <div className="zs-case-image"><span className="zs-case-number">{String(index + 1).padStart(2, '0')}</span><img src={item.img} alt={item.title} loading="lazy" width="480" height="360" /></div>
+          <figcaption><p className="zs-english">{item.tag}</p><h3>{chem(item.title)}</h3></figcaption>
+        </figure>)}</div></section>
+        <section className="zs-section zs-container" id="about"><Title number="04" id="about" /><div className="zs-about">
+          <div className="zs-about-label"><p className="zs-kicker">RESEARCH BACKGROUND</p><h3>理论计算<br />与实验研究</h3><Link href="/cv"><a className="zs-text-link">查看个人学术履历 ↗</a></Link></div>
+          <div><p className="zs-role">{co.founder.role}</p><ul>{co.founder.lines.map(line => <li key={line}>{line}</li>)}</ul></div>
+        </div></section>
+        <section className="zs-section zs-container" id="contact"><Title number="05" id="steps" /><p className="zs-collaboration">{co.collaboration}</p>
+          <ol className="zs-steps">{co.steps.map((step, index) => <li key={step.title}><span className="zs-number">0{index + 1}</span><h3>{step.title}</h3><p>{step.text}</p></li>)}</ol>
+          <div className="zs-contact"><div><h3>{co.cta.title}</h3><p>{co.cta.text}</p><p className="zs-commercial">{co.commercialNote}</p></div><a className="zs-contact-mail" href={'mailto:' + co.email + '?subject=' + encodeURIComponent('计算研究与合作咨询')}><span>联系邮箱</span><b>{co.email}</b><span>邮件咨询 ↗</span></a></div>
+          <p className="zs-license">{co.licenseNote}</p>
+        </section>
+      </main>
+      <footer className="zs-footer"><div className="zs-container"><div><b>{co.name}</b><p>{co.en}</p></div><div><p>统一社会信用代码 {co.creditCode}</p><p>© {new Date().getFullYear()} {co.name}</p></div></div></footer>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
     </div>
   )
 }
 
 const CSS = `
-        .zs-root {
-          --ink: #0b1b33; --sub: #52627a; --mute: #8a97aa; --line: #e6ebf2; --soft: #f5f8fc;
-          --b1: #2f5bff; --b2: #14c8d8; --grad: linear-gradient(120deg, #2f5bff 0%, #1e8fea 50%, #14c8d8 100%);
-          background: #fff; color: var(--ink); min-height: 100vh; overflow-x: hidden;
-          font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
-          -webkit-font-smoothing: antialiased; line-height: 1.6;
-        }
-        .zs-root * { box-sizing: border-box; }
-        .zs-root a { color: inherit; text-decoration: none; }
-        .zs-root h1, .zs-root h2, .zs-root h3, .zs-root p, .zs-root ul, .zs-root ol, .zs-root figure { margin: 0; padding: 0; }
-        .zs-root h1, .zs-root h2, .zs-root h3, .zs-root b { font-weight: 700; }
-        .zs-root ul, .zs-root ol { list-style: none; }
-        .zs-root sub { font-size: .7em; vertical-align: baseline; position: relative; top: .25em; }
-        .zs-mono, .zs-eyebrow, .zs-no, .zs-en, .zs-soft span, .zs-steps span, .zs-why-no, .zs-case figcaption span, .zs-card-h span {
-          font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; letter-spacing: .04em;
-        }
+.zs-model-stage { position:relative; height:330px; }
+.zs-model-fallback { position:absolute; inset:0; width:100%; height:100% !important; object-fit:contain; }
+.zs-model-canvas { position:absolute; inset:0; }
+.zs-model-canvas canvas { width:100%; height:100%; display:block; }
+.zs-hero3d.ready .zs-model-fallback { visibility:hidden; }
+.zs-model-tools { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; padding:10px 16px 0; }
+.zs-model-tools button { border:1px solid var(--line); border-radius:999px; background:#fff; color:var(--ink); padding:7px 14px; font:inherit; font-size:12px; cursor:pointer; }
+.zs-model-tools button[aria-pressed="true"] { background:var(--ink); color:#fff; }
+.zs-model-tools button:disabled { opacity:.5; cursor:default; }
+.zs-root .zs-model-help { font-size:11px; color:var(--muted); padding:10px 16px 14px; min-height:42px; }
+@media(max-width:600px) { .zs-model-stage { height:290px; } }
+@media print { .zs-model-canvas,.zs-model-tools,.zs-model-help { display:none; } .zs-hero3d.ready .zs-model-fallback { visibility:visible; } }
 
-        .zs-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between;
-          padding: 14px clamp(16px, 4vw, 56px); background: rgba(255,255,255,.72); backdrop-filter: saturate(1.6) blur(14px);
-          -webkit-backdrop-filter: saturate(1.6) blur(14px); border-bottom: 1px solid rgba(230,235,242,.7); }
-        .zs-brand { display: flex; align-items: center; gap: 10px; }
-        .zs-brand-t { display: flex; flex-direction: column; line-height: 1.15; }
-        .zs-brand-t b { font-size: 17px; letter-spacing: .08em; }
-        .zs-brand-t i { font-style: normal; font-size: 10.5px; color: var(--mute); letter-spacing: .06em; }
-        .zs-nav nav { display: flex; align-items: center; gap: 28px; font-size: 14.5px; color: var(--sub); }
-        .zs-nav nav a:hover { color: var(--ink); }
-        .zs-nav-cta { padding: 7px 16px; border-radius: 999px; background: var(--ink); color: #fff !important; }
-
-        .zs-hero { position: relative; padding: 100px clamp(16px, 5vw, 72px) 40px; overflow: hidden; }
-        .zs-grid-bg { position: absolute; inset: 0; background-image: radial-gradient(rgba(47,91,255,.16) 1px, transparent 1.2px);
-          background-size: 22px 22px; mask-image: radial-gradient(ellipse 70% 60% at 65% 40%, #000 20%, transparent 75%);
-          -webkit-mask-image: radial-gradient(ellipse 70% 60% at 65% 40%, #000 20%, transparent 75%); pointer-events: none; }
-        .zs-orb { position: absolute; border-radius: 50%; filter: blur(70px); pointer-events: none; opacity: .5; }
-        .zs-orb1 { width: 520px; height: 520px; right: -120px; top: 40px; background: radial-gradient(circle, rgba(20,200,216,.35), transparent 65%); animation: zsFloat 14s ease-in-out infinite; }
-        .zs-orb2 { width: 420px; height: 420px; right: 280px; top: 260px; background: radial-gradient(circle, rgba(47,91,255,.22), transparent 65%); animation: zsFloat 18s ease-in-out infinite reverse; }
-        @keyframes zsFloat { 50% { transform: translate(-30px, 24px); } }
-        .zs-hero-in { position: relative; max-width: 1240px; margin: 0 auto; min-height: 560px; display: flex; align-items: center; }
-        .zs-hero-text { position: relative; z-index: 2; max-width: 600px; pointer-events: none; }
-        .zs-hero-text a, .zs-hero-text .zs-tag { pointer-events: auto; }
-        .zs-eyebrow { font-size: 12.5px; color: var(--b1); margin-bottom: 20px; display: inline-flex; align-items: center; gap: 10px; }
-        .zs-eyebrow::before { content: ""; width: 28px; height: 1.5px; background: var(--grad); }
-        .zs-h1l { display: block; white-space: nowrap; }
-        .zs-hero h1 { font-size: clamp(28px, 3.7vw, 54px); line-height: 1.16; font-weight: 700; letter-spacing: .01em; }
-        .zs-grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .zs-lead { margin-top: 22px; font-size: 16.5px; color: var(--sub); max-width: 34em; }
-        .zs-tags { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
-        .zs-tag { display: inline-flex; align-items: center; gap: 10px; padding: 9px 18px 9px 10px; border: 1px solid var(--line); border-radius: 12px;
-          background: rgba(255,255,255,.8); font-weight: 600; font-size: 16px; box-shadow: 0 1px 0 rgba(11,27,51,.03); }
-        .zs-tag i { font-style: normal; font-family: "SF Mono", Menlo, monospace; font-size: 11px; color: #fff; background: var(--grad); border-radius: 7px; padding: 3px 6px; }
-        .zs-hero-cta { display: flex; gap: 12px; margin-top: 34px; flex-wrap: wrap; }
-        .zs-btn { display: inline-flex; align-items: center; justify-content: center; padding: 13px 26px; border-radius: 12px; font-weight: 600; font-size: 15px;
-          background: var(--ink); color: #fff !important; transition: transform .2s, box-shadow .2s; box-shadow: 0 10px 30px -12px rgba(47,91,255,.55); }
-        .zs-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -12px rgba(47,91,255,.7); }
-        .zs-btn.ghost { background: #fff; color: var(--ink) !important; border: 1px solid var(--line); box-shadow: none; }
-
-        .zs-hero3d { position: absolute; z-index: 1; top: 50%; right: -12vw; transform: translateY(-50%); width: min(100vw, 1400px); height: 940px; }
-        .zs-hero3d .zs-hero-canvas, .zs-hero3d .zs-hero-fallback {
-          mask-image: linear-gradient(90deg, transparent 8%, rgba(0,0,0,.18) 26%, rgba(0,0,0,.55) 40%, #000 52%), linear-gradient(180deg, transparent 0%, #000 12%, #000 76%, transparent 96%);
-          -webkit-mask-image: linear-gradient(90deg, transparent 8%, rgba(0,0,0,.18) 26%, rgba(0,0,0,.55) 40%, #000 52%), linear-gradient(180deg, transparent 0%, #000 12%, #000 76%, transparent 96%);
-          mask-composite: intersect; -webkit-mask-composite: source-in; }
-        .zs-lead { text-shadow: 0 0 10px #fff, 0 0 4px #fff; }
-        .zs-hero-canvas, .zs-hero-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
-        .zs-hero-fallback { object-fit: contain; transition: opacity .8s; }
-        .zs-hero-canvas { opacity: 0; transition: opacity .8s; cursor: grab; }
-        .zs-hero3d.on .zs-hero-canvas { opacity: 1; }
-        .zs-hero3d.on .zs-hero-fallback { opacity: 0; }
-        .zs-hero-hint-unused { position: absolute; bottom: 6%; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--mute); letter-spacing: .1em;
-          padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.8); white-space: nowrap; }
-
-        .zs-stats { position: relative; z-index: 2; max-width: 1240px; margin: 36px auto 0; display: grid; grid-template-columns: repeat(3, 1fr);
-          border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.85); backdrop-filter: blur(8px); }
-        .zs-stat { padding: 24px 28px; border-left: 1px solid var(--line); }
-        .zs-stat:first-child { border-left: 0; }
-        .zs-stat b { display: block; font-size: 38px; font-weight: 700; line-height: 1.1; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
-          font-family: "SF Pro Display", -apple-system, "Helvetica Neue", sans-serif; font-variant-numeric: tabular-nums; }
-        .zs-stat > span { font-size: 14px; color: var(--sub); }
-
-        .zs-sec { max-width: 1240px; margin: 0 auto; padding: 110px clamp(16px, 5vw, 72px) 0; box-sizing: content-box; }
-        .zs-title { margin-bottom: 44px; max-width: 760px; }
-        .zs-no { display: inline-block; font-size: 12.5px; color: var(--b1); margin-bottom: 14px; }
-        .zs-title h2 { font-size: clamp(24px, 2.8vw, 36px); font-weight: 700; line-height: 1.3; letter-spacing: -.005em; }
-        .zs-en { font-size: 13px; color: var(--mute); text-transform: uppercase; }
-
-        .zs-svc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-        .zs-card { border: 1px solid var(--line); border-radius: 20px; overflow: hidden; background: #fff; transition: transform .35s, box-shadow .35s, border-color .35s, opacity .7s; position: relative; }
-        .zs-card:hover { transform: translateY(-6px); border-color: rgba(47,91,255,.35); box-shadow: 0 28px 60px -30px rgba(30,70,160,.35); }
-        .zs-card-img { aspect-ratio: 4 / 3; background: radial-gradient(ellipse at 50% 60%, #f3f7fd 0%, #fff 70%); display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .zs-card-img img { width: 100%; height: 100%; object-fit: contain; transition: transform .6s; }
-        .zs-card:hover .zs-card-img img { transform: scale(1.05); }
-        .zs-card-body { padding: 22px 24px 24px; border-top: 1px solid var(--line); }
-        .zs-card-h { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
-        .zs-card-h h3 { font-size: 19px; }
-        .zs-card-h span { font-size: 11px; color: var(--mute); text-transform: uppercase; }
-        .zs-card li { position: relative; padding-left: 16px; font-size: 14.5px; color: var(--sub); line-height: 1.95; }
-        .zs-card li::before { content: ""; position: absolute; left: 0; top: .82em; width: 6px; height: 6px; border-radius: 2px; background: var(--grad); }
-        .zs-soft { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-        .zs-soft span { font-size: 11.5px; padding: 3px 9px; border-radius: 6px; background: var(--soft); color: #34507e; border: 1px solid #e3eaf5; }
-
-        .zs-why { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-        .zs-why-c { position: relative; padding: 30px 26px 30px; border-radius: 20px; border: 1px solid var(--line); background: #fff; overflow: hidden; transition: opacity .7s, transform .7s; }
-        .zs-why-c.key { background: linear-gradient(160deg, #f4f8ff 0%, #fff 60%); }
-        .zs-why-c::after { content: ""; position: absolute; left: 0; top: 0; right: 0; height: 3px; background: var(--grad); opacity: .9; }
-        .zs-why-no { font-size: 13px; color: var(--mute); }
-        .zs-why-c h3 { font-size: 30px; margin: 10px 0 12px; }
-        .zs-why-c p { font-size: 14.5px; color: var(--sub); }
-
-        .zs-gallery { overflow: hidden; margin: 0 calc(-1 * clamp(16px, 5vw, 72px)); padding: 6px 0 10px;
-          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
-        .zs-gtrack { display: flex; gap: 20px; width: max-content; animation: zsScroll 70s linear infinite; }
-        .zs-gallery:hover .zs-gtrack { animation-play-state: paused; }
-        .zs-case { position: relative; flex: none; width: 400px; aspect-ratio: 4 / 3.4; border-radius: 22px; overflow: hidden; border: 1px solid var(--line);
-          background: radial-gradient(ellipse at 50% 55%, #f2f6fc 0%, #fff 72%); }
-        .zs-case img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform .8s; padding: 12px 12px 56px; box-sizing: border-box; }
-        .zs-case:hover img { transform: scale(1.05); }
-        .zs-case figcaption { position: absolute; left: 0; bottom: 0; right: 0; display: flex; flex-direction: column; gap: 3px; padding: 40px 22px 18px;
-          background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.88) 45%, #fff 100%); }
-        .zs-case figcaption span { font-size: 11.5px; color: var(--b1); }
-        .zs-case figcaption b { font-size: 17px; }
-
-        .zs-strip { padding: 64px 0 0; }
-        .zs-strip-t { text-align: center; font-size: 13.5px; color: var(--mute); margin-bottom: 22px !important; }
-        .zs-marquee { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
-        .zs-track { display: flex; gap: 14px; width: max-content; animation: zsScroll 48s linear infinite; }
-        .zs-marquee:hover .zs-track { animation-play-state: paused; }
-        @keyframes zsScroll { to { transform: translateX(-50%); } }
-        .zs-track .zs-school { flex: none; width: 150px; }
-        .zs-school.wide img { width: 110px; }
-        .zs-schools { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
-        .zs-school { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 22px 10px 16px; border: 1px solid var(--line); border-radius: 16px; background: #fff; transition: all .3s; }
-        .zs-school img { width: 64px; height: 64px; object-fit: contain; filter: grayscale(1); opacity: .62; transition: all .35s; }
-        .zs-school span { font-size: 13px; color: var(--sub); text-align: center; }
-        .zs-school:hover { border-color: rgba(47,91,255,.3); box-shadow: 0 14px 30px -20px rgba(30,70,160,.4); }
-        .zs-school:hover img { filter: none; opacity: 1; }
-        .zs-note { font-size: 12.5px; color: var(--mute); margin-top: 16px; }
-
-        .zs-badge { aspect-ratio: 1 / 1; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-          background: radial-gradient(circle at 30% 20%, #1c3a7a 0%, #0b1b33 70%); color: #fff; position: relative; overflow: hidden; }
-        .zs-badge::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.14) 1px, transparent 1.2px); background-size: 16px 16px; }
-        .zs-badge > * { position: relative; }
-        .zs-badge b { font-size: 26px; letter-spacing: .12em; margin-top: 10px; }
-        .zs-badge span { font-size: 14px; color: #9fb4d8; letter-spacing: .1em; }
-        .zs-founder { display: grid; grid-template-columns: 240px 1fr; gap: 48px; align-items: center; padding: 36px; border: 1px solid var(--line); border-radius: 24px;
-          background: linear-gradient(135deg, #f6f9ff 0%, #fff 55%); }
-        .zs-founder h3 { font-size: 22px; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
-        .zs-founder h3 span { font-size: 14px; color: var(--b1); font-weight: 500; }
-        .zs-founder li { font-size: 15.5px; color: var(--sub); padding: 8px 0 8px 22px; border-bottom: 1px dashed var(--line); position: relative; }
-        .zs-founder li::before { content: ""; position: absolute; left: 2px; top: 1.05em; width: 8px; height: 8px; border: 2px solid var(--b2); border-radius: 50%; }
-        .zs-link { display: inline-block; margin-top: 20px; color: var(--b1) !important; font-weight: 600; }
-
-        .zs-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; counter-reset: s; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
-        .zs-steps li { padding: 28px 26px; border-left: 1px solid var(--line); position: relative; transition: opacity .7s, transform .7s; }
-        .zs-steps li:first-child { border-left: 0; }
-        .zs-steps span { font-size: 12px; color: var(--b1); }
-        .zs-steps h3 { font-size: 20px; margin: 8px 0 6px; }
-        .zs-steps p { font-size: 14px; color: var(--sub); }
-        .zs-cta { margin-top: 28px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 36px 40px; border-radius: 24px;
-          background: #0b1b33; color: #fff; position: relative; overflow: hidden; transition: opacity .7s, transform .7s; }
-        .zs-cta::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.12) 1px, transparent 1.2px); background-size: 20px 20px;
-          mask-image: linear-gradient(90deg, transparent, #000); -webkit-mask-image: linear-gradient(90deg, transparent, #000); }
-        .zs-cta::after { content: ""; position: absolute; right: -80px; top: -120px; width: 360px; height: 360px; border-radius: 50%; background: radial-gradient(circle, rgba(20,200,216,.45), transparent 65%); }
-        .zs-cta > * { position: relative; z-index: 1; }
-        .zs-cta h3 { font-size: 24px; }
-        .zs-cta p { color: #a9b6cc; margin-top: 6px; font-size: 14.5px; }
-        .zs-cta .zs-btn { background: #fff; color: var(--ink) !important; }
-
-        .zs-foot { margin-top: 110px; border-top: 1px solid var(--line); background: var(--soft); padding: 40px clamp(16px, 5vw, 72px) 28px; }
-        .zs-foot-in { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
-        .zs-foot-r { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--sub); text-align: right; }
-        .zs-partners { color: var(--mute); font-size: 12px; margin-top: 6px; }
-        .zs-copy { max-width: 1240px; margin: 22px auto 0; font-size: 12px; color: var(--mute); }
-
-        .zs-float { position: fixed; right: 22px; bottom: 22px; z-index: 50; width: 232px; padding: 18px; border-radius: 18px;
-          background: rgba(255,255,255,.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--line);
-          box-shadow: 0 24px 60px -24px rgba(20,50,120,.35); }
-        .zs-float::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; width: 3px; border-radius: 0 3px 3px 0; background: var(--grad); }
-        .zs-float-head { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; }
-        .zs-dot { width: 8px; height: 8px; border-radius: 50%; background: #20c07a; box-shadow: 0 0 0 0 rgba(32,192,122,.6); animation: zsPulse 2s infinite; }
-        @keyframes zsPulse { 70% { box-shadow: 0 0 0 8px rgba(32,192,122,0); } 100% { box-shadow: 0 0 0 0 rgba(32,192,122,0); } }
-        .zs-float-t { font-size: 12.5px; color: var(--sub); margin: 4px 0 12px !important; }
-        .zs-float-mail { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 9px 10px; border-radius: 10px; border: 1px dashed #c9d5ea;
-          background: var(--soft); cursor: pointer; font-size: 12.5px; color: var(--ink); font-family: "SF Mono", Menlo, monospace; }
-        .zs-float-mail em { font-style: normal; font-size: 11px; color: var(--b1); flex: none; font-family: -apple-system, "PingFang SC", sans-serif; }
-        .zs-float-btn { display: block; text-align: center; margin-top: 10px; padding: 10px; border-radius: 10px; background: var(--grad); color: #fff !important; font-weight: 600; font-size: 14px; }
-        .zs-float-s { font-size: 11.5px; color: var(--mute); margin-top: 10px !important; text-align: center; }
-
-        .reveal { opacity: 0; transform: translateY(26px); }
-        .reveal.in { opacity: 1; transform: none; transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
-        .zs-card.reveal.in:hover { transform: translateY(-6px); }
-        @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } .zs-orb, .zs-track, .zs-gtrack { animation: none; } .zs-gallery { overflow-x: auto; } }
-
-                @media (max-width: 1600px) { .zs-float { width: 214px; padding: 14px; } .zs-float-s { display: none; } }
-        @media (pointer: coarse) { .zs-hero-hint-unused { display: none; } }
-        @media (max-width: 960px) {
-          .zs-nav nav a:not(.zs-nav-cta) { display: none; }
-          .zs-hero { padding-top: 96px; }
-          .zs-hero-in { display: block; min-height: 0; }
-          .zs-hero-text { pointer-events: auto; }
-          .zs-hero3d { position: relative; top: auto; right: auto; transform: none; width: 100%; max-width: 560px; height: auto; aspect-ratio: 1 / 1; margin: 0 auto; }
-          .zs-hero3d .zs-hero-canvas, .zs-hero3d .zs-hero-fallback { mask-image: none; -webkit-mask-image: none; }
-          .zs-svc { grid-template-columns: repeat(2, 1fr); }
-          .zs-why { grid-template-columns: repeat(2, 1fr); }
-          .zs-case { width: 300px; }
-          .zs-founder { grid-template-columns: 1fr; gap: 24px; padding: 22px; }
-          .zs-badge { max-width: 220px; }
-          .zs-steps { grid-template-columns: repeat(2, 1fr); }
-          .zs-steps li:nth-child(3) { border-left: 0; }
-          .zs-steps li:nth-child(n+3) { border-top: 1px solid var(--line); }
-        }
-        @media (max-width: 640px) {
-          .zs-sec { padding-top: 76px; }
-          .zs-svc, .zs-why { grid-template-columns: 1fr; }
-          .zs-stat { padding: 16px 12px; }
-          .zs-stat > span { font-size: 12.5px; }
-          .zs-stat b { font-size: 26px; }
-          .zs-schools { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-          .zs-track .zs-school { width: 118px; }
-          .zs-school img { width: 48px; height: 48px; }
-          .zs-school span { font-size: 11.5px; }
-          .zs-steps { grid-template-columns: 1fr; }
-          .zs-steps li { border-left: 0 !important; border-top: 1px solid var(--line); }
-          .zs-steps li:first-child { border-top: 0; }
-          .zs-cta { padding: 26px 22px; }
-          .zs-foot { padding-bottom: 96px; }
-          .zs-foot-r { text-align: left; }
-          .zs-float { left: 12px; right: 12px; bottom: 12px; width: auto; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
-          .zs-float::before, .zs-float-t, .zs-float-s, .zs-float-head { display: none; }
-          .zs-float-mail { flex: 1; min-width: 0; }
-          .zs-float-mail span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-          .zs-float-btn { margin-top: 0; padding: 9px 14px; flex: none; }
-        }
-        /* ---- 学术风 ---- */
-        .zs-root { --b1: #1f3a68; --b2: #1f3a68; --grad: #1f3a68; --serif: "Source Han Serif SC", "Noto Serif SC", "Songti SC", "STSong", "SimSun", "Times New Roman", serif; }
-        .zs-root h1, .zs-root h2, .zs-root h3, .zs-stat b, .zs-brand-t b, .zs-keys dt, .zs-badge b { font-family: var(--serif); }
-        .zs-grad { background: none; color: inherit; }
-        .zs-eyebrow { font-family: var(--serif); font-size: 14px; letter-spacing: .14em; color: var(--sub); }
-        .zs-eyebrow::before { background: var(--ink); width: 36px; height: 1px; }
-        .zs-hero h1 { font-weight: 700; letter-spacing: .04em; line-height: 1.25; font-size: clamp(30px, 3.9vw, 56px); }
-        .zs-hero-en { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-size: 17px; color: var(--sub); margin-top: 16px !important; max-width: 30em; line-height: 1.5; }
-        .zs-lead { margin-top: 20px; font-size: 16px; max-width: 29em; }
-        .zs-hero-en { max-width: 27em !important; }
-        .zs-keys { display: grid; grid-template-columns: repeat(3, auto); gap: 0; margin: 30px 0 0; padding: 16px 0 0; border-top: 1px solid var(--ink); max-width: 560px; }
-        .zs-keys > div { padding-right: 22px; margin-right: 22px; border-right: 1px solid var(--line); }
-        .zs-keys > div:last-child { border-right: 0; margin-right: 0; }
-        .zs-keys dt { font-size: 19px; font-weight: 700; }
-        .zs-keys dd { margin: 4px 0 0; font-size: 13.5px; color: var(--sub); white-space: nowrap; }
-        .zs-keys { max-width: none !important; width: max-content; }
-        .zs-btn { border-radius: 3px; box-shadow: none; background: var(--ink); padding: 12px 24px; }
-        .zs-btn:hover { transform: none; box-shadow: none; background: #1f3a68; }
-        .zs-btn.ghost { border-color: var(--ink); }
-        .zs-stat b { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: var(--ink); font-weight: 700; }
-        .zs-stats, .zs-card, .zs-why-c, .zs-case, .zs-school, .zs-founder, .zs-steps, .zs-badge, .zs-cta { border-radius: 4px; }
-        .zs-no { color: var(--sub); font-family: var(--serif); letter-spacing: .12em; }
-        .zs-card li::before { background: var(--ink); border-radius: 0; width: 5px; height: 5px; }
-        .zs-why-c::after { height: 2px; background: var(--ink); }
-        .zs-why-c.key { background: #fff; }
-        .zs-float { border-radius: 4px; }
-        .zs-float::before { background: var(--ink); }
-        .zs-float-btn { background: var(--ink); border-radius: 3px; }
-        .zs-float-mail { border-radius: 3px; }
-        .zs-nav-cta { border-radius: 3px; }
-        .zs-founder { background: #fff; }
-        .zs-founder li::before { border-color: var(--ink); border-radius: 0; width: 6px; height: 6px; top: 1.2em; }
-        .zs-case figcaption span, .zs-steps span, .zs-why-no { color: var(--sub); }
-        .zs-card-h span, .zs-steps span, .zs-why-no, .zs-case figcaption span { font-family: Georgia, "Times New Roman", serif; font-style: italic; text-transform: none; letter-spacing: .02em; font-size: 13px; }
-        .zs-cta::after { background: radial-gradient(circle, rgba(90,120,170,.35), transparent 65%); }
-        .zs-lead { margin-top: 18px !important; }
-        @media (max-width: 640px) {
-          .zs-keys { grid-template-columns: 1fr 1fr 1fr; }
-          .zs-keys > div { padding-right: 10px; margin-right: 10px; }
-          .zs-keys dt { font-size: 16px; }
-          .zs-keys dd { font-size: 12px; white-space: normal; }
-          .zs-keys { width: auto; }
-          .zs-hero-en { font-size: 15px; }
-        }
-      `
+html:has(.zs-root) { scroll-behavior:smooth; scroll-padding-top:112px; }
+.zs-root { --ink:#1d1d1f; --body:#5b5c62; --muted:#74757c; --line:rgba(25,30,40,.10); --paper:#f5f5f7; --blue:#285b91; color:var(--ink); background:#fff; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif; line-height:1.75; -webkit-font-smoothing:antialiased; }
+.zs-root *, .zs-root *::before, .zs-root *::after { box-sizing:border-box; }
+.zs-root h1,.zs-root h2,.zs-root h3,.zs-root p,.zs-root figure,.zs-root dl,.zs-root dd,.zs-root ul,.zs-root ol { margin:0; }
+.zs-root ul,.zs-root ol { padding:0; list-style:none; }
+.zs-root a { color:inherit; text-decoration:none; }
+.zs-root a:focus-visible,.zs-root button:focus-visible { outline:3px solid #8eb8e5; outline-offset:5px; }
+.zs-root h1,.zs-root h2,.zs-root h3 { font-weight:650; letter-spacing:-.04em; text-wrap:balance; }
+.zs-root sub { font-size:.72em; vertical-align:sub; line-height:0; }
+.zs-container { width:min(1160px,calc(100% - 96px)); margin:0 auto; }
+.zs-nav { position:sticky; top:0; z-index:20; min-height:76px; padding:14px max(32px,calc((100% - 1240px)/2)); display:flex; justify-content:space-between; align-items:center; gap:24px; background:rgba(255,255,255,.86); -webkit-backdrop-filter:blur(20px) saturate(140%); backdrop-filter:blur(20px) saturate(140%); border-bottom:1px solid var(--line); }
+.zs-brand { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.zs-brand img { width:30px; height:30px; }
+.zs-brand b { display:block; font-size:20px; letter-spacing:.04em; line-height:1.4; font-weight:650; }
+.zs-brand small { display:block; font-size:9px; letter-spacing:.025em; color:var(--muted); }
+.zs-nav nav { display:flex; gap:30px; align-items:center; font-size:12px; font-weight:500; }
+.zs-nav nav a { transition:color .25s ease; }
+.zs-nav nav a:hover { color:var(--blue); }
+.zs-nav-contact { background:var(--ink); color:#fff !important; padding:8px 15px; border-radius:999px; }
+.zs-hero { text-align:center; padding:64px 0 86px; }
+.zs-hero-text { animation:zsHeroEnter 1s cubic-bezier(.16,1,.3,1) both; }
+.zs-kicker { font-size:12px; font-weight:500; color:var(--muted); letter-spacing:.08em; }
+.zs-hero h1 { margin-top:20px; line-height:1.14; }
+.zs-hero h1 span { display:block; }
+.zs-hero h1 span:first-child { font-size:clamp(28px,3.4vw,48px); color:#54545a; font-weight:550; margin-bottom:10px; }
+.zs-hero h1 span:last-child { font-size:clamp(46px,6.5vw,86px); font-weight:700; letter-spacing:-.065em; }
+.zs-root .zs-hero-en { font-family:Georgia,serif; font-size:16px; color:var(--muted); margin-top:20px; }
+.zs-root .zs-lead { font-size:17px; line-height:1.85; color:var(--body); max-width:820px; margin:24px auto 0; }
+.zs-actions { display:flex; justify-content:center; align-items:center; gap:26px; margin-top:27px; font-size:14px; }
+.zs-button { background:var(--ink); color:#fff !important; padding:12px 24px; border-radius:999px; transition:background .25s ease,box-shadow .25s ease,transform .25s ease; }
+.zs-button:hover { background:#35363c; transform:translateY(-2px); box-shadow:0 8px 22px rgba(0,0,0,.12); }
+.zs-text-link { color:var(--blue) !important; font-size:14px; transition:color .25s ease; }
+.zs-text-link:hover { color:#173854 !important; }
+.zs-hero-figure { margin:42px auto 0 !important; max-width:1000px; position:relative; border:1px solid var(--line); border-radius:30px; overflow:hidden; background:radial-gradient(ellipse at 50% 80%,#eef1f4,#f7f7f9 65%); box-shadow:0 24px 75px -50px rgba(30,45,70,.32); animation:zsHeroEnter 1.3s .12s cubic-bezier(.16,1,.3,1) both; }
+.zs-figure-label { display:flex; justify-content:space-between; padding:17px 24px; font-size:10px; letter-spacing:.13em; color:var(--muted); }
+.zs-hero-figure img { width:100%; height:330px; object-fit:contain; display:block; padding:0 20px; }
+.zs-hero-figure figcaption { display:flex; justify-content:space-between; padding:14px 24px; gap:12px; font-size:11px; color:var(--muted); border-top:1px solid rgba(25,30,40,.06); }
+.zs-methods { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; max-width:820px; margin:36px auto 0 !important; }
+.zs-methods > div { border-right:1px solid var(--line); }
+.zs-methods > div:last-child { border:0; }
+.zs-methods dt { font-size:23px; font-weight:650; letter-spacing:-.02em; }
+.zs-methods dd { font-size:12px; color:var(--muted); margin-top:5px; }
+.zs-section { padding:84px 0 96px; border-top:1px solid var(--line); scroll-margin-top:104px; }
+.zs-title { max-width:920px; margin-bottom:48px; }
+.zs-title h2 { font-size:clamp(32px,4vw,54px); line-height:1.25; margin-top:12px; }
+.zs-story { display:grid; grid-template-columns:1.1fr 1fr; gap:80px; align-items:start; margin:24px 0 86px; }
+.zs-story-media { position:sticky; top:108px; padding:22px; background:var(--paper); border:1px solid var(--line); border-radius:28px; }
+.zs-story-controls { display:flex; justify-content:center; gap:4px; margin:auto; padding:5px; background:#e7e8ec; border-radius:999px; width:fit-content; }
+.zs-story-controls button { border:0; padding:9px 16px; border-radius:999px; background:transparent; color:#62636a; font-size:12px; cursor:pointer; font-family:inherit; transition:background .35s ease,color .35s ease,box-shadow .35s ease; }
+.zs-story-controls button[aria-pressed="true"] { background:#fff; color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.06); }
+.zs-story-image { position:relative; height:340px; margin:12px 0; }
+.zs-story-layer { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:12px; opacity:0; transform:translate3d(0,14px,0) scale(.98); transition:opacity .9s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1); pointer-events:none; }
+.zs-story-layer.is-active { opacity:1; transform:translate3d(0,0,0) scale(1); }
+.zs-story-caption { display:flex; justify-content:space-between; gap:12px; font-size:11px; color:var(--muted); border-top:1px solid var(--line); padding-top:15px; }
+.zs-story-chapters article { min-height:310px; display:flex; flex-direction:column; justify-content:center; padding:38px 0; border-bottom:1px solid var(--line); scroll-margin-top:130px; }
+.zs-story-chapters article:first-child { padding-top:0; }
+.zs-story-chapters article:last-child { border:0; }
+.zs-story-chapters h3 { font-size:32px; line-height:1.45; margin:16px 0; max-width:440px; }
+.zs-story-chapters article > p:last-child { font-size:16px; line-height:1.95; color:var(--body); }
+.zs-story-mobile-image { display:none; }
+.zs-service-heading { margin-bottom:28px; display:flex; align-items:baseline; justify-content:space-between; gap:24px; }
+.zs-service-heading h3 { font-size:28px; }
+.zs-service-heading p { font-size:13px; color:var(--muted); }
+.zs-services { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+.zs-service { padding:25px; background:var(--paper); border:1px solid transparent; border-radius:24px; display:flex; flex-direction:column; transition:border-color .3s ease,box-shadow .3s ease; }
+.zs-service:hover { border-color:rgba(80,100,125,.18); box-shadow:0 14px 35px -25px rgba(30,40,55,.3); }
+.zs-service-top { display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:94px; margin-bottom:14px; }
+.zs-english { font-family:Georgia,serif; font-size:11px; color:var(--muted); line-height:1.6; }
+.zs-service-top h3 { font-size:20px; margin-top:6px; }
+.zs-service-top img { width:76px; height:76px; object-fit:contain; }
+.zs-service li { font-size:13px; color:var(--body); padding-left:12px; position:relative; margin:6px 0; }
+.zs-service li::before { content:"·"; position:absolute; left:0; }
+.zs-software { display:flex; flex-wrap:wrap; gap:6px; margin-top:auto; padding-top:22px; }
+.zs-software span { background:rgba(255,255,255,.7); border:1px solid rgba(0,0,0,.04); font-size:10px; color:var(--body); padding:3px 8px; border-radius:6px; }
+.zs-root .zs-method-note { font-size:12px; line-height:1.9; color:var(--muted); margin-top:22px; }
+.zs-principles { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:32px; }
+.zs-principles article { border-top:2px solid #32343b; padding-top:20px; }
+.zs-number { font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums; }
+.zs-principles h3,.zs-steps h3 { font-size:23px; margin:12px 0; }
+.zs-principles p,.zs-steps p { font-size:14px; line-height:1.9; color:var(--body); }
+.zs-root .zs-intro { max-width:730px; font-size:16px; line-height:1.95; color:var(--body); margin:-16px 0 36px; }
+.zs-cases { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:36px 26px; }
+.zs-cases figure { min-width:0; border:1px solid var(--line); border-radius:24px; overflow:hidden; }
+.zs-case-image { background:var(--paper); position:relative; overflow:hidden; }
+.zs-case-number { position:absolute; top:20px; left:24px; z-index:1; font:12px Georgia,serif; color:var(--muted); }
+.zs-case-image img { display:block; width:100%; height:auto; aspect-ratio:1.55; object-fit:contain; padding:26px 24px; transition:transform .8s cubic-bezier(.22,1,.36,1); }
+.zs-cases figure:hover .zs-case-image img { transform:scale(1.025); }
+.zs-cases figcaption { padding:22px 26px 24px; border-top:1px solid var(--line); }
+.zs-cases h3 { font-size:19px; line-height:1.5; margin-top:8px; letter-spacing:-.015em; font-weight:600; }
+.zs-about { display:grid; grid-template-columns:1fr 1.5fr; gap:70px; padding:48px; background:var(--paper); border-radius:28px; }
+.zs-about-label h3 { font-size:37px; line-height:1.4; margin:20px 0 26px; }
+.zs-role { font-size:12px; color:var(--muted); margin-bottom:12px !important; }
+.zs-about li { padding:15px 0; border-bottom:1px solid var(--line); font-size:15px; line-height:1.9; color:var(--body); }
+.zs-about li:first-child { font-size:18px; color:var(--ink); font-weight:600; }
+.zs-about li:last-child { border:0; }
+.zs-collaboration { font-size:20px; max-width:900px; line-height:1.8; color:var(--body); margin-bottom:42px !important; }
+.zs-steps { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:30px; }
+.zs-steps li { border-top:1px solid var(--line); padding-top:20px; }
+.zs-contact { display:grid; grid-template-columns:1.5fr 1fr; gap:60px; padding:45px; margin-top:50px; border-radius:28px; background:#1d1f24; color:#fff; }
+.zs-contact h3 { font-size:29px; line-height:1.4; margin-bottom:18px; }
+.zs-contact p { color:#d2d4db; font-size:14px; line-height:1.95; }
+.zs-root .zs-commercial { font-size:12px; color:#a7acb7; margin-top:20px; }
+.zs-contact-mail { display:flex; flex-direction:column; justify-content:center; align-items:flex-start; gap:12px; border-left:1px solid #41444d; padding-left:36px; overflow-wrap:anywhere; }
+.zs-contact-mail span { font-size:12px; color:#b9bdc8; }
+.zs-contact-mail b { font-size:20px; font-weight:500; letter-spacing:-.025em; }
+.zs-root .zs-license { font-size:12px; color:#62636b; line-height:1.95; margin-top:24px; }
+.zs-footer { padding:34px 0; border-top:1px solid var(--line); background:var(--paper); }
+.zs-footer .zs-container { display:flex; justify-content:space-between; gap:24px; font-size:11px; color:var(--muted); }
+.zs-footer b { font-size:14px; color:var(--ink); font-weight:550; }
+.zs-reveal { opacity:0; transform:translate3d(0,30px,0); transition:opacity .85s cubic-bezier(.16,1,.3,1),transform .95s cubic-bezier(.16,1,.3,1); transition-delay:var(--reveal-delay,0ms); }
+.zs-reveal.zs-shown { opacity:1; transform:translate3d(0,0,0); }
+@keyframes zsHeroEnter { from { opacity:0; transform:translate3d(0,18px,0); } to { opacity:1; transform:translate3d(0,0,0); } }
+@media(max-width:1000px) { .zs-container { width:calc(100% - 64px); } .zs-nav { padding:14px 32px; } .zs-nav nav { gap:20px; } .zs-story { gap:36px; } .zs-story-chapters h3 { font-size:28px; } .zs-story-media { padding:18px; } .zs-story-image { height:300px; } .zs-story-controls button { padding:8px 10px; } .zs-services { grid-template-columns:repeat(2,minmax(0,1fr)); } .zs-principles,.zs-steps { grid-template-columns:repeat(2,minmax(0,1fr)); } .zs-about { gap:36px; padding:32px; } .zs-contact { gap:30px; padding:32px; } }
+@media(max-width:700px) { html:has(.zs-root) { scroll-padding-top:128px; } .zs-container { width:calc(100% - 40px); } .zs-nav { padding:12px 20px; flex-wrap:wrap; gap:12px; } .zs-brand b { font-size:19px; } .zs-nav nav { width:100%; justify-content:space-between; gap:12px; font-size:11px; } .zs-nav-contact { padding:6px 11px; } .zs-hero { padding:38px 0 52px; } .zs-hero h1 { margin-top:18px; } .zs-hero h1 span:first-child { font-size:25px; letter-spacing:-.045em; } .zs-hero h1 span:last-child { font-size:47px; } .zs-hero .zs-kicker { font-size:10px; letter-spacing:.03em; } .zs-root .zs-hero-en { font-size:13px; max-width:320px; margin:18px auto 0; } .zs-root .zs-lead { font-size:14px; line-height:1.9; margin-top:20px; text-align:left; } .zs-actions { margin-top:24px; gap:20px; font-size:12px; } .zs-button { padding:11px 19px; } .zs-text-link { font-size:12px; } .zs-hero-figure { margin-top:30px !important; border-radius:22px; } .zs-hero-figure img { height:230px; padding:0 8px; } .zs-figure-label { padding:13px 16px; font-size:8px; } .zs-hero-figure figcaption { padding:12px 16px; font-size:9px; } .zs-methods { gap:8px; margin-top:26px !important; } .zs-methods dt { font-size:19px; } .zs-methods dd { font-size:10px; } .zs-section { padding:54px 0 62px; scroll-margin-top:122px; } .zs-title { margin-bottom:32px; } .zs-title h2 { font-size:32px; line-height:1.4; } .zs-story { display:block; margin:0 0 48px; } .zs-story-media { display:none; } .zs-story-chapters article { min-height:0; padding:32px 0; } .zs-story-chapters article:first-child { padding-top:0; } .zs-story-mobile-image { display:block; width:100%; height:190px; object-fit:contain; padding:8px; background:var(--paper); border-radius:22px; margin-top:20px; } .zs-story-chapters h3 { font-size:27px; margin-top:22px; } .zs-story-chapters article > p:last-child { font-size:14px; } .zs-service-heading { display:block; } .zs-service-heading h3 { font-size:24px; } .zs-service-heading p { margin-top:8px; } .zs-services { grid-template-columns:1fr; gap:16px; } .zs-service { padding:23px; border-radius:20px; } .zs-principles,.zs-steps { gap:28px 22px; } .zs-principles h3,.zs-steps h3 { font-size:20px; } .zs-principles p,.zs-steps p { font-size:13px; } .zs-root .zs-intro { font-size:14px; margin-top:-8px; } .zs-cases { grid-template-columns:1fr; gap:24px; } .zs-cases figure { border-radius:20px; } .zs-case-image img { aspect-ratio:1.45; padding:24px 20px; } .zs-cases figcaption { padding:18px 20px 21px; } .zs-cases h3 { font-size:17px; } .zs-about { grid-template-columns:1fr; gap:28px; padding:25px; border-radius:22px; } .zs-about-label h3 { font-size:30px; } .zs-about li { font-size:14px; } .zs-about li:first-child { font-size:17px; } .zs-collaboration { font-size:17px; margin-bottom:30px !important; } .zs-contact { grid-template-columns:1fr; padding:26px; border-radius:22px; gap:25px; margin-top:35px; } .zs-contact h3 { font-size:25px; } .zs-contact-mail { border-left:0; border-top:1px solid #41444d; padding-left:0; padding-top:25px; } .zs-contact-mail b { font-size:18px; } .zs-footer .zs-container { flex-direction:column; gap:16px; } }
+@media(prefers-reduced-motion:reduce) { html:has(.zs-root) { scroll-behavior:auto; } .zs-root *, .zs-root *::before,.zs-root *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } .zs-reveal { opacity:1; transform:none; } .zs-story-layer { transform:none; } .zs-button:hover,.zs-cases figure:hover img { transform:none; } }
+@media print { html,body,#__next { background:#fff !important; scroll-behavior:auto !important; } @page { size:A4; margin:14mm; } .zs-root *, .zs-root *::before,.zs-root *::after { animation:none !important; transition:none !important; } .zs-reveal { opacity:1 !important; transform:none !important; } .zs-container { width:100%; } .zs-nav { position:static; padding:0 0 14px; min-height:0; background:#fff; } .zs-nav nav,.zs-actions { display:none; } .zs-hero { padding:24px 0 30px; } .zs-hero h1 span:first-child { font-size:24px; } .zs-hero h1 span:last-child { font-size:43px; } .zs-root .zs-lead { font-size:11px; margin-top:14px; } .zs-root .zs-hero-en { font-size:11px; } .zs-hero-figure { margin-top:22px !important; border-radius:16px; } .zs-hero-figure img { height:200px; } .zs-methods { margin-top:20px !important; } .zs-methods dt { font-size:18px; } .zs-methods dd { font-size:10px; } .zs-section { padding:28px 0; } .zs-title { margin-bottom:24px; break-inside:avoid; break-after:avoid; } .zs-title h2 { font-size:28px; } .zs-story { display:block; margin-bottom:30px; } .zs-story-media { display:none; } .zs-story-chapters article { min-height:0; padding:18px 0; break-inside:avoid; display:block; } .zs-story-chapters h3 { font-size:21px; margin:8px 0; } .zs-story-chapters article > p:last-child { font-size:11px; } .zs-story-mobile-image { display:block; float:right; width:140px; height:110px; object-fit:contain; padding:8px; margin:0 0 14px 20px; } .zs-services { grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; } .zs-service-heading h3 { font-size:22px; } .zs-service-heading p { font-size:10px; } .zs-service { padding:16px; break-inside:avoid; } .zs-service li,.zs-principles p,.zs-steps p { font-size:11px; } .zs-principles,.zs-steps { grid-template-columns:repeat(2,minmax(0,1fr)); } .zs-cases { grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; } .zs-cases figure { break-inside:avoid; } .zs-cases h3 { font-size:14px; } .zs-case-image img { padding:20px 14px; } .zs-cases figcaption { padding:12px 16px; } .zs-about { padding:24px; gap:28px; break-inside:avoid; } .zs-about-label h3 { font-size:26px; } .zs-about li { font-size:11px; } .zs-about li:first-child { font-size:13px; } .zs-collaboration { font-size:13px; } .zs-contact { padding:24px; gap:30px; background:#f5f5f7; color:var(--ink); break-inside:avoid; } .zs-contact h3 { font-size:22px; } .zs-contact p,.zs-contact-mail span,.zs-root .zs-commercial { color:var(--body); font-size:11px; } .zs-contact-mail { border-color:var(--line); padding-left:24px; } .zs-contact-mail b { font-size:14px; } .zs-root .zs-license { font-size:10px; } .zs-footer { padding:20px 0; } }
+`
 
 export async function getStaticProps() {
   return { props: {} }

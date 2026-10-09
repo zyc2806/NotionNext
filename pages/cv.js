@@ -6,7 +6,7 @@ import cv from '@/data/cv.json'
 
 // 把字符串里的 unicode 上下标（₀₁₂…⁻⁺ 等）转换成 <sub>/<sup> 元素，
 // 字号和基线由 CSS 控制，这样 TNR / Optima 渲染才会正常。
-const SUB_MAP = { '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4', '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9' }
+const SUB_MAP = { '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4', '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9', ₓ: 'x' }
 const SUP_MAP = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '−', '⁺': '+' }
 const formatScientific = (text) => {
   if (!text) return text
@@ -75,6 +75,9 @@ const UI = {
     downloadPdf: 'Download PDF',
     backToBlog: '← Back to blog',
     footerPrefix: 'Last updated',
+    manuscripts: 'Manuscripts under review',
+    onlineDate: 'First online',
+    contribution: 'My contribution',
     footerSuffix: '. Built with Next.js · Hosted on Vercel.',
     metaDesc: name => `Curriculum Vitae of ${name.en}, ${name.title}, ${name.affiliation}.`,
     toggleLabel: '中',
@@ -109,6 +112,9 @@ const UI = {
     downloadPdf: '下载 PDF',
     backToBlog: '← 返回博客',
     footerPrefix: '最后更新于',
+    manuscripts: '审稿中的稿件',
+    onlineDate: '首次在线发表',
+    contribution: '本人贡献',
     footerSuffix: '。基于 Next.js 构建 · 由 Vercel 托管。',
     metaDesc: name => `${name.en}（${name.zh}）的个人简历，${name.title}，${name.affiliation}。`,
     toggleLabel: 'EN',
@@ -136,7 +142,7 @@ const CitationInner = ({ p }) => (
     <em className="not-italic font-semibold">{p.venue}</em>
     {p.volume_pages && <span>, {p.volume_pages}</span>}
     {p.status && <span className="italic"> ({typeof p.status === 'string' ? p.status : (p.status.en || '')})</span>}
-    <span> · {p.year}</span>
+    {p.year && <span> · {p.year}</span>}
   </>
 )
 
@@ -218,13 +224,16 @@ export default function CV() {
   const ui = UI[lang]
 
   // group publications by year, descending
-  const pubsByYear = publications.reduce((acc, p) => {
+  const manuscripts = publications.filter(p => p.status)
+  const pubsByYear = publications.filter(p => !p.status).reduce((acc, p) => {
     const k = p.year
     acc[k] = acc[k] || []
     acc[k].push(p)
     return acc
   }, {})
   const years = Object.keys(pubsByYear).map(Number).sort((a, b) => b - a)
+  const publicationSections = years.map(year => ({ key: year, label: year, items: pubsByYear[year] }))
+  if (manuscripts.length) publicationSections.push({ key: 'manuscripts', label: ui.manuscripts, items: manuscripts })
 
   const photoSrc = profile.photo || BLOG.AVATAR || '/avatar.svg'
   const titleStr = t(profile.title, lang)
@@ -368,6 +377,11 @@ export default function CV() {
                     <i className="fas fa-graduation-cap w-4" /> Google Scholar
                   </a>
                 )}
+                {profile.links?.researchgate && (
+                  <a href={profile.links.researchgate} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-purple-700 dark:hover:text-purple-300">
+                    <i className="fab fa-researchgate w-4" /> ResearchGate
+                  </a>
+                )}
                 {profile.links?.orcid && (
                   <a href={profile.links.orcid} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-purple-700 dark:hover:text-purple-300">
                     <i className="fab fa-orcid w-4" /> ORCID
@@ -448,13 +462,13 @@ export default function CV() {
 
             <Section id="publications" title={ui.sectionTitles.publications}>
               {renderPubLegend(lang)}
-              {years.map(year => (
-                <div key={year} className="mb-8">
+              {publicationSections.map(group => (
+                <div key={group.key} className="mb-8">
                   <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-3 font-sans">
-                    {year}
+                    {group.label}
                   </h3>
                   <ol className="space-y-5 list-none">
-                    {pubsByYear[year].map((p, i) => (
+                    {group.items.map((p, i) => (
                       <li key={i} className="pl-5 border-l-2 border-gray-200 dark:border-gray-700 hover:border-purple-700 dark:hover:border-purple-300 transition-colors">
                         <div className="text-[15px] font-medium text-gray-900 dark:text-white leading-snug">
                           {renderTitle(p, lang)}
@@ -465,6 +479,12 @@ export default function CV() {
                         <div className="text-sm mt-1 text-gray-600 dark:text-gray-400">
                           {renderCitationLine({ ...p, status: t(p.status, lang) })}
                         </div>
+                        {p.publication_date && (
+                          <p className="text-xs mt-1 text-gray-500 dark:text-gray-400">{ui.onlineDate}: {p.publication_date}</p>
+                        )}
+                        {p.contribution && (
+                          <p className="text-sm mt-2 text-gray-700 dark:text-gray-300">{ui.contribution}: {t(p.contribution, lang)}</p>
+                        )}
                         {p.highlight && (
                           <p className="text-sm mt-2 text-gray-600 dark:text-gray-400 leading-relaxed">
                             {formatScientific(t(p.highlight, lang))}
@@ -538,7 +558,7 @@ export default function CV() {
             </Section>
 
             <footer className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-400 dark:text-gray-500 font-sans">
-              {ui.footerPrefix} {new Date().getFullYear()}{ui.footerSuffix}
+              {ui.footerPrefix} 2026-10-05{ui.footerSuffix}
             </footer>
           </article>
         </div>
