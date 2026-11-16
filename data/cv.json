@@ -32,7 +32,10 @@
       "website": "https://zhangyichen.life",
       "researchgate": "https://www.researchgate.net/profile/Zhang-Yichen-3"
     },
-    "cv_pdf": "/cv.pdf"
+    "cv_pdf": {
+      "en": "/cv.pdf",
+      "zh": "/cv_zh.pdf"
+    }
   },
   "education": [
     {
@@ -117,6 +120,66 @@
     }
   ],
   "publications": [
+    {
+      "title": {
+        "en": "Selective Oxidation of Toluene to Benzaldehyde Driven by Electroreduction of Oxygen to Hydrogen Peroxide Coupled with In-situ Electro-Fenton Reaction",
+        "zh": "氧电还原制过氧化氢耦合原位电芬顿反应驱动甲苯选择性氧化为苯甲醛"
+      },
+      "authors": [
+        {
+          "name": "Cao, Z.",
+          "co_first": true
+        },
+        {
+          "name": "Zhang, Y.",
+          "self": true,
+          "co_first": true
+        },
+        {
+          "name": "Ma, J."
+        },
+        {
+          "name": "Jiang, Y."
+        },
+        {
+          "name": "Yi, Y."
+        },
+        {
+          "name": "Qin, L."
+        },
+        {
+          "name": "Wang, M."
+        },
+        {
+          "name": "Vicini, A."
+        },
+        {
+          "name": "Chen, L."
+        },
+        {
+          "name": "Chen, S. (Shaowei)",
+          "corresponding": true
+        },
+        {
+          "name": "Chen, S. (Shanyong)",
+          "corresponding": true
+        },
+        {
+          "name": "Liu, Y.-N."
+        }
+      ],
+      "venue": "Angew. Chem. Int. Ed.",
+      "year": null,
+      "publication_status": "accepted",
+      "status": {
+        "en": "accepted; awaiting publication",
+        "zh": "已接收，待出版"
+      },
+      "contribution": {
+        "en": "Co-first author, second in author order.",
+        "zh": "共同第一作者，排序第二。"
+      }
+    },
     {
       "title": {
         "en": "Atomic-level ruthenium-doped NiOₓ electrocatalyst achieves efficient conversion of 5-hydroxymethylfurfural to oxidized products under near-neutral conditions",
@@ -543,6 +606,20 @@
   "awards": [
     {
       "title": {
+        "en": "Wang Jiading Scholarship",
+        "zh": "汪家鼎奖学金"
+      },
+      "org": {
+        "en": "Tsinghua University",
+        "zh": "清华大学"
+      },
+      "date": {
+        "en": "Nov 2026",
+        "zh": "2026.11"
+      }
+    },
+    {
+      "title": {
         "en": "Friends of Tsinghua – Shanghai Huayi Scholarship",
         "zh": "清华之友 — 上海华谊奖学金"
       },
@@ -728,5 +805,90 @@
       "en": "Solid programming background: Python (NumPy, PyTorch, ASE, pymatgen), Bash / SLURM, MATLAB and C; builds automated simulation workflows.",
       "zh": "代码基础扎实：Python（NumPy、PyTorch、ASE、pymatgen）、Bash / SLURM、MATLAB 与 C；能独立搭建自动化模拟流程。"
     }
-  ]
+  ],
+  "experience": [
+    {
+      "title": {
+        "en": "Founder | Beijing Zhisuan Molecular Technology Co., Ltd.",
+        "zh": "自主创业｜北京智算分子科技有限公司"
+      },
+      "date": {
+        "en": "Mar 2026 – Present",
+        "zh": "2026.03–至今"
+      },
+      "description": {
+        "en": "Developing agent infrastructure and computational-chemistry software, with a focus on persistent task execution, iterative improvement of the execution harness and research-project coordination.",
+        "zh": "面向科研计算与计算化学服务，自主研发智能体基础设施与业务平台，重点开展长任务持续执行、Harness 迭代演进及科研项目协同。"
+      },
+      "projects": [
+        {
+          "title": {
+            "en": "Loop engineering for long-running agents",
+            "zh": "长任务智能体 Loop 工程"
+          },
+          "description": {
+            "en": "Built goal-driven execution loops for task decomposition, execution, evidence checks and continuation. Implemented persistent state, session recovery, job-wait handling, progress detection and resource limits to coordinate asynchronous HPC jobs with multi-stage research tasks.",
+            "zh": "构建目标驱动的“任务拆解—执行—证据核验—续做”闭环，设计状态持久化、会话恢复、作业等待与唤醒、进展判定及资源预算控制，衔接异步超算作业与多阶段科研任务。"
+          }
+        },
+        {
+          "title": {
+            "en": "Self-evolving agent harness",
+            "zh": "自进化 Harness"
+          },
+          "description": {
+            "en": "Developing a reusable harness that integrates context management, domain skills, tool interfaces and execution checks. Use run feedback and failure reviews to refine skills, rules and tool workflows, with regression checks supporting each iteration.",
+            "zh": "将上下文管理、领域技能、工具接口与执行校验整合为可复用 Harness；围绕“运行反馈—失败复盘—技能与规则更新—回归验证”持续迭代，沉淀可复用流程与问题处理经验。"
+          }
+        },
+        {
+          "title": {
+            "en": "Computational-chemistry project coordination platform",
+            "zh": "计算化学项目协同平台"
+          },
+          "description": {
+            "en": "Developed a platform for project tracking, HPC job monitoring, compute-usage accounting and multi-agent coordination. Connected request intake, calculation execution, result verification and delivery, with human review of outgoing messages and key decisions.",
+            "zh": "自主开发项目管理与多智能体协同平台，整合项目进度、超算作业监控及算力用量统计，串联需求整理、计算执行、结果核验和交付，并设置对外回复与关键决策的人工审核。"
+          }
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Xiaomi Technology Co., Ltd. | Algorithm Engineer Intern",
+        "zh": "小米科技有限公司｜算法工程师（实习）"
+      },
+      "date": {
+        "en": "Oct 2026 – Present",
+        "zh": "2026.10–至今"
+      },
+      "description": {
+        "en": "AI4S research and development in the Materials-core team, led by Zhiao Yu, focusing on agent systems and proprietary models for materials discovery.",
+        "zh": "在俞之奡负责的材料-core 团队开展 AI4S 算法研发，围绕材料发现构建智能体系统与专有模型。"
+      },
+      "projects": [
+        {
+          "title": {
+            "en": "Materials-discovery agent systems",
+            "zh": "材料发现智能体系统"
+          },
+          "description": {
+            "en": "Developing agent workflows for research-task decomposition, tool coordination and computational workflow orchestration, supporting the execution of materials-research tasks and the organization of research results.",
+            "zh": "面向材料发现任务构建智能体系统，开展研究任务拆解、工具协同与计算流程编排，将材料探索任务组织为可执行、可跟踪的工作流，支持研究任务执行与结果整理。"
+          }
+        },
+        {
+          "title": {
+            "en": "Proprietary model development",
+            "zh": "专有模型构建"
+          },
+          "description": {
+            "en": "Contributing to proprietary model development for materials discovery and its integration with agent workflows to support materials-research applications.",
+            "zh": "参与面向材料发现的专有模型构建，围绕材料研究需求开展模型能力建设及与智能体工作流的衔接，支持相关研究任务的应用落地。"
+          }
+        }
+      ]
+    }
+  ],
+  "updated_at": "2026-11-17"
 }

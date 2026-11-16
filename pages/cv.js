@@ -51,6 +51,7 @@ const UI = {
       about: 'About',
       education: 'Education',
       research: 'Research',
+      experience: 'Experience',
       publications: 'Publications',
       awards: 'Awards',
       skills: 'Skills'
@@ -59,6 +60,7 @@ const UI = {
       about: 'About',
       education: 'Education',
       research: 'Research Experience',
+      experience: 'Entrepreneurship & Internships',
       publications: 'Publications',
       awards: 'Awards & Scholarships',
       skills: 'Skills & Interests'
@@ -76,6 +78,7 @@ const UI = {
     backToBlog: '← Back to blog',
     footerPrefix: 'Last updated',
     manuscripts: 'Manuscripts under review',
+    accepted: 'Accepted papers',
     onlineDate: 'First online',
     contribution: 'My contribution',
     footerSuffix: '. Built with Next.js · Hosted on Vercel.',
@@ -88,6 +91,7 @@ const UI = {
       about: '简介',
       education: '教育经历',
       research: '研究经历',
+      experience: '创业与实习经历',
       publications: '论文发表',
       awards: '奖励荣誉',
       skills: '技能与方向'
@@ -96,6 +100,7 @@ const UI = {
       about: '简介',
       education: '教育经历',
       research: '研究经历',
+      experience: '创业与实习经历',
       publications: '论文发表',
       awards: '奖励与荣誉',
       skills: '技能与研究方向'
@@ -113,6 +118,7 @@ const UI = {
     backToBlog: '← 返回博客',
     footerPrefix: '最后更新于',
     manuscripts: '审稿中的稿件',
+    accepted: '已接收论文',
     onlineDate: '首次在线发表',
     contribution: '本人贡献',
     footerSuffix: '。基于 Next.js 构建 · 由 Vercel 托管。',
@@ -204,8 +210,60 @@ const Section = ({ id, title, children }) => (
   </section>
 )
 
+const getPublicationSections = (publications, ui) => {
+  const manuscripts = publications.filter(p => p.status && p.publication_status !== 'accepted')
+  const pubsByYear = publications.filter(p => !p.status).reduce((acc, p) => {
+    const k = p.year
+    acc[k] = acc[k] || []
+    acc[k].push(p)
+    return acc
+  }, {})
+  const years = Object.keys(pubsByYear).map(Number).sort((a, b) => b - a)
+  const publicationSections = years.map(year => ({ key: year, label: year, items: pubsByYear[year] }))
+  const accepted = publications.filter(p => p.publication_status === 'accepted')
+  if (accepted.length) publicationSections.unshift({ key: 'accepted', label: ui.accepted, items: accepted })
+  if (manuscripts.length) publicationSections.push({ key: 'manuscripts', label: ui.manuscripts, items: manuscripts })
+
+  return publicationSections
+}
+
+const ExperienceProjects = ({ projects, lang }) => (
+  projects?.length > 0 && (
+    <ul className="list-disc ml-5 mt-3 space-y-2 text-[15px] text-gray-700 dark:text-gray-300 leading-relaxed">
+      {projects.map((project, i) => (
+        <li key={i}>
+          <strong>{t(project.title, lang)}: </strong>{t(project.description, lang)}
+        </li>
+      ))}
+    </ul>
+  )
+)
+
+const ExperienceSection = ({ experience, lang, title }) => (
+  experience?.length > 0 && (
+    <Section id="experience" title={title}>
+      <ul className="space-y-5">
+        {experience.map((entry, i) => (
+          <li key={i}>
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
+              <div className="font-semibold text-gray-900 dark:text-white">{t(entry.title, lang)}</div>
+              <div className="text-sm text-gray-500 font-sans whitespace-nowrap sm:ml-4">{t(entry.date, lang)}</div>
+            </div>
+            {entry.description && (
+              <p className="text-[15px] text-gray-700 dark:text-gray-300 leading-relaxed mt-1">
+                {t(entry.description, lang)}
+              </p>
+            )}
+            <ExperienceProjects projects={entry.projects} lang={lang} />
+          </li>
+        ))}
+      </ul>
+    </Section>
+  )
+)
+
 export default function CV() {
-  const { profile, education, research, publications, awards, skills, summary } = cv
+  const { profile, education, research, experience, publications, awards, skills, summary, updated_at: updatedAt } = cv
 
   // Default 'en' on the server / first render to keep SSR markup stable.
   // After hydration, restore the user's last choice from localStorage.
@@ -223,17 +281,7 @@ export default function CV() {
   }
   const ui = UI[lang]
 
-  // group publications by year, descending
-  const manuscripts = publications.filter(p => p.status)
-  const pubsByYear = publications.filter(p => !p.status).reduce((acc, p) => {
-    const k = p.year
-    acc[k] = acc[k] || []
-    acc[k].push(p)
-    return acc
-  }, {})
-  const years = Object.keys(pubsByYear).map(Number).sort((a, b) => b - a)
-  const publicationSections = years.map(year => ({ key: year, label: year, items: pubsByYear[year] }))
-  if (manuscripts.length) publicationSections.push({ key: 'manuscripts', label: ui.manuscripts, items: manuscripts })
+  const publicationSections = getPublicationSections(publications, ui)
 
   const photoSrc = profile.photo || BLOG.AVATAR || '/avatar.svg'
   const titleStr = t(profile.title, lang)
@@ -345,6 +393,7 @@ export default function CV() {
                   ['about', ui.nav.about],
                   ['education', ui.nav.education],
                   ['research', ui.nav.research],
+                  ['experience', ui.nav.experience],
                   ['publications', ui.nav.publications],
                   ['awards', ui.nav.awards],
                   ['skills', ui.nav.skills]
@@ -397,10 +446,10 @@ export default function CV() {
 
               {profile.cv_pdf && (
                 <a
-                  href={profile.cv_pdf}
+                  href={t(profile.cv_pdf, lang)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  download="Zhang_Yichen_CV.pdf"
+                  download={`Zhang_Yichen_CV_${lang}.pdf`}
                   className="mt-6 inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold tracking-wider uppercase border border-purple-700 dark:border-purple-300 text-purple-700 dark:text-purple-300 hover:bg-purple-700 hover:text-white dark:hover:bg-purple-300 dark:hover:text-gray-900 transition-colors font-sans"
                 >
                   <i className="fas fa-file-pdf" /> {ui.downloadPdf}
@@ -459,6 +508,8 @@ export default function CV() {
                 </ul>
               </Section>
             )}
+
+            <ExperienceSection experience={experience} lang={lang} title={ui.sectionTitles.experience} />
 
             <Section id="publications" title={ui.sectionTitles.publications}>
               {renderPubLegend(lang)}
@@ -558,7 +609,7 @@ export default function CV() {
             </Section>
 
             <footer className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-400 dark:text-gray-500 font-sans">
-              {ui.footerPrefix} 2026-10-05{ui.footerSuffix}
+              {ui.footerPrefix} {updatedAt || '2026-10-05'}{ui.footerSuffix}
             </footer>
           </article>
         </div>
