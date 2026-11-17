@@ -2,7 +2,6 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import co from '@/data/company.json'
-import Hero3D from '@/components/CompanyHero3D'
 
 const chem = text => text.split(/([₀-₉]+)/u).map((part, index) => index % 2
   ? <sub key={index}>{part.replace(/[₀-₉]/gu, ch => String(ch.charCodeAt(0) - 0x2080))}</sub>
@@ -64,6 +63,7 @@ function installScrollReveal(root) {
 export default function Company() {
   const rootRef = useRef(null)
   const [activeMethod, setActiveMethod] = useState(0)
+  const [wallPaused, setWallPaused] = useState(false)
   useEffect(() => installScrollReveal(rootRef.current), [])
   useEffect(() => installMethodObserver(rootRef.current, setActiveMethod), [])
   const selectMethod = index => {
@@ -91,7 +91,19 @@ export default function Company() {
             <p className="zs-hero-en">{co.hero.en}</p><p className="zs-lead">{co.hero.lead}</p>
             <div className="zs-actions"><a className="zs-button" href="#services">了解研究方法</a><a className="zs-text-link" href="#contact">讨论研究问题 ↗</a></div>
           </div>
-          <figure className="zs-hero-figure"><div className="zs-figure-label"><span>ATOMISTIC MODEL</span><span>01</span></div><Hero3D /><figcaption><span>结构 · 电子 · 反应</span><span>原子尺度模型示意</span></figcaption></figure>
+          <section className="zs-logo-wall" id="schools" aria-labelledby="schools-heading">
+            <div className="zs-wall-heading"><h2 id="schools-heading">{co.schoolsTitle}</h2><button type="button" aria-pressed={wallPaused} onClick={() => setWallPaused(!wallPaused)}>{wallPaused ? '继续滚动' : '暂停滚动'}</button></div>
+            <div className={'zs-marquee' + (wallPaused ? ' is-paused' : '')}>
+              <div className="zs-track">
+                {[0, 1].map(copy => <div className="zs-school-group" key={copy} aria-hidden={copy === 1}>
+                  {co.schools.map(school => <div key={school.name} className={'zs-school' + (school.wide ? ' wide' : '')}>
+                    <img src={'/company/logos/' + school.logo} alt="" width="64" height="64" />
+                    <span>{school.name}</span>
+                  </div>)}
+                </div>)}
+              </div>
+            </div>
+          </section>
           <dl className="zs-methods">{co.hero.tags.map(tag => <div key={tag.t}><dt>{tag.t}</dt><dd>{tag.d}</dd></div>)}</dl>
         </section>
         <section className="zs-section zs-container" id="services">
@@ -134,18 +146,24 @@ export default function Company() {
 }
 
 const CSS = `
-.zs-model-stage { position:relative; height:330px; }
-.zs-model-fallback { position:absolute; inset:0; width:100%; height:100% !important; object-fit:contain; }
-.zs-model-canvas { position:absolute; inset:0; }
-.zs-model-canvas canvas { width:100%; height:100%; display:block; }
-.zs-hero3d.ready .zs-model-fallback { visibility:hidden; }
-.zs-model-tools { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; padding:10px 16px 0; }
-.zs-model-tools button { border:1px solid var(--line); border-radius:999px; background:#fff; color:var(--ink); padding:7px 14px; font:inherit; font-size:12px; cursor:pointer; }
-.zs-model-tools button[aria-pressed="true"] { background:var(--ink); color:#fff; }
-.zs-model-tools button:disabled { opacity:.5; cursor:default; }
-.zs-root .zs-model-help { font-size:11px; color:var(--muted); padding:10px 16px 14px; min-height:42px; }
-@media(max-width:600px) { .zs-model-stage { height:290px; } }
-@media print { .zs-model-canvas,.zs-model-tools,.zs-model-help { display:none; } .zs-hero3d.ready .zs-model-fallback { visibility:visible; } }
+/* Restore the school marquee from d7a3ee4, using its original logos and motion. */
+.zs-logo-wall { margin:42px auto 0; max-width:1000px; }
+.zs-wall-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 12px 22px; }
+.zs-wall-heading h2 { font-size:14px; color:var(--muted); font-weight:500; letter-spacing:.02em; }
+.zs-wall-heading button { border:1px solid var(--line); border-radius:999px; padding:5px 12px; background:#fff; color:var(--body); font:inherit; font-size:11px; cursor:pointer; }
+.zs-marquee { overflow:hidden; mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent); -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent); }
+.zs-track { display:flex; width:max-content; animation:zsScroll 48s linear infinite; }
+.zs-school-group { display:flex; gap:14px; padding-right:14px; flex:none; }
+.zs-marquee:hover .zs-track,.zs-marquee.is-paused .zs-track { animation-play-state:paused; }
+@keyframes zsScroll { to { transform:translateX(-50%); } }
+.zs-school { flex:none; width:150px; display:flex; flex-direction:column; align-items:center; gap:12px; padding:22px 10px 16px; border:1px solid var(--line); border-radius:16px; background:#fff; transition:border-color .3s,box-shadow .3s; }
+.zs-school img { width:64px; height:64px; object-fit:contain; filter:grayscale(1); opacity:.62; transition:filter .35s,opacity .35s; }
+.zs-school.wide img { width:110px; }
+.zs-school span { font-size:13px; color:var(--body); text-align:center; }
+.zs-school:hover { border-color:rgba(40,91,145,.3); box-shadow:0 14px 30px -20px rgba(30,70,160,.4); }
+.zs-school:hover img { filter:none; opacity:1; }
+@media(max-width:600px) { .zs-logo-wall { margin-top:30px; } .zs-school { width:118px; } .zs-school img { width:48px; height:48px; } .zs-school.wide img { width:90px; } .zs-school span { font-size:11.5px; } }
+@media(prefers-reduced-motion:reduce),print { .zs-wall-heading button,.zs-school-group[aria-hidden="true"] { display:none; } .zs-marquee { overflow:visible; mask-image:none; -webkit-mask-image:none; } .zs-track { width:100%; animation:none; } .zs-school-group { width:100%; flex-wrap:wrap; justify-content:center; padding:0; } .zs-school { break-inside:avoid; } }
 
 html:has(.zs-root) { scroll-behavior:smooth; scroll-padding-top:112px; }
 .zs-root { --ink:#1d1d1f; --body:#5b5c62; --muted:#74757c; --line:rgba(25,30,40,.10); --paper:#f5f5f7; --blue:#285b91; color:var(--ink); background:#fff; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif; line-height:1.75; -webkit-font-smoothing:antialiased; }
